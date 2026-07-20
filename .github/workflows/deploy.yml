@@ -22,9 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: withastro/action@v3
-        # proiectul e în subfolderul site/
-        with:
-          path: site
+        # proiectul e în rădăcina repo-ului (package.json la nivel de sus)
 
   deploy:
     needs: build
