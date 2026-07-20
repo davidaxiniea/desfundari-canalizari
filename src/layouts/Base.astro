@@ -1,0 +1,123 @@
+---
+/*
+  Layout de bază: fonturi self-hosted, SEO local, Open Graph, schema.org Plumber.
+  Titlul și descrierea sunt fixe — pagină unică, optimizată pe „desfundări canalizări București Ilfov".
+*/
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-ext-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-ext-500.css';
+import '@fontsource/jetbrains-mono/latin-500.css';
+import '../styles/global.css';
+import { FIRMA, ZONE_ILFOV } from '../lib/firma';
+
+interface Props {
+  // Paginile secundare (ex. /multumim) nu se indexează
+  noindex?: boolean;
+}
+const { noindex = false } = Astro.props;
+
+const title = 'Desfundări Canalizări București & Ilfov · Non-Stop 24/7 · 0760 509 072';
+const description =
+  'Desfundări canalizare, inspecție video, curățare țevi cu hidrojet, vidanjare și reparații canalizare în București și Ilfov. Non-stop 24/7, preț spus înainte. Sună 0760 509 072.';
+
+// BASE_URL are slash la final (ex. „/desfundari-canalizari/"); îl folosim ca să
+// prefixăm căile absolute către asseturi și canonical-ul, ca să meargă în subfolder.
+// withBase garantează exact un slash între base și cale (base poate avea sau nu „/" la final)
+const withBase = (p: string) => `${import.meta.env.BASE_URL.replace(/\/$/, '')}/${p.replace(/^\//, '')}`;
+const canonical = new URL(withBase(''), Astro.site).href;
+const ogImage = new URL(withBase('og.png'), Astro.site).href;
+
+// Schema.org: LocalBusiness de tip Plumber, cu servicii, program 24/7 și rating agregat
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Plumber',
+  name: FIRMA.nume,
+  url: canonical,
+  image: ogImage,
+  telephone: FIRMA.telefonPrincipal.tel,
+  priceRange: '$$',
+  areaServed: [
+    { '@type': 'City', name: 'București' },
+    { '@type': 'AdministrativeArea', name: 'Ilfov' },
+    ...ZONE_ILFOV.map((name) => ({ '@type': 'City', name })),
+  ],
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: '00:00',
+    closes: '23:59',
+  },
+  aggregateRating: {
+    '@type': 'AggregateRating',
+    ratingValue: FIRMA.rating.valoare,
+    reviewCount: String(FIRMA.rating.numarRecenzii),
+  },
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Servicii desfundări și canalizări',
+    itemListElement: [
+      'Desfundări canalizare',
+      'Inspecție video canalizare',
+      'Reparații canalizare',
+      'Curățare țevi cu hidrojet',
+      'Vidanjare',
+      'Intervenții non-stop 24/7',
+    ].map((name) => ({
+      '@type': 'Offer',
+      itemOffered: { '@type': 'Service', name, areaServed: 'București și Ilfov' },
+    })),
+  },
+};
+---
+
+<html lang="ro">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Marchează prezența JS — animațiile de reveal se activează doar cu clasa .js */}
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" type="image/png" sizes="32x32" href={withBase('monograma-32.png')} />
+    <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <link rel="apple-touch-icon" sizes="180x180" href={withBase('monograma-180.png')} />
+    <link rel="sitemap" href={withBase('sitemap-index.xml')} />
+    <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="ro_RO" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+  </head>
+  <body>
+    <slot />
+    <script>
+      // Reveal la scroll: adaugă .in-view o singură dată; fără librării
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              observer.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.2 },
+      );
+      document.querySelectorAll('[data-reveal], [data-observe]').forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,57 @@
+---
+/*
+  Hero pe petrol: titlul-verdict al brandului, două CTA, trust-signals.
+  Litera „u" din „Curge" e portocalie — gestul sifonului.
+*/
+import Icon from './Icon.astro';
+import FlowLine from './FlowLine.astro';
+import Disponibil from './Disponibil.astro';
+import { FIRMA } from '../lib/firma';
+
+const trust = [
+  { icon: 'ceas', text: 'Ajungem în aceeași zi' },
+  { icon: 'stea', text: `${FIRMA.rating.valoare} din ${FIRMA.rating.numarRecenzii} recenzii Google` },
+  { icon: 'luna', text: 'Non-stop 24/7' },
+] as const;
+---
+
+<section id="sus" class="bg-petrol text-portelan">
+  <div class="mx-auto max-w-6xl px-5 pt-32 pb-16 md:px-8 md:pt-44 md:pb-24">
+    <div class="flex flex-wrap items-center gap-4">
+      <p class="eyebrow text-muted-dark">București · Ilfov · Non-stop</p>
+      <Disponibil class="text-muted-dark" />
+    </div>
+
+    <h1 class="text-display mt-5 max-w-3xl">
+      Suni. Venim. C<span class="text-semnal">u</span>rge.
+    </h1>
+
+    <p class="mt-6 max-w-xl text-h3 text-muted-dark">
+      Desfundări și canalizări non-stop în București și Ilfov. Preț spus înainte, nu după.
+    </p>
+
+    <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+      <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="btn-semnal text-h3">
+        <Icon name="telefon" class="h-5 w-5" />
+        Sună <span class="font-mono">{FIRMA.telefonPrincipal.afisare}</span>
+      </a>
+      <a href="#servicii" class="btn-outline-dark text-h3">Vezi serviciile</a>
+    </div>
+
+    <ul class="mt-10 flex flex-wrap gap-x-7 gap-y-3">
+      {
+        trust.map((t) => (
+          <li class="flex items-center gap-2 text-caption text-muted-dark">
+            <Icon name={t.icon} class="h-4 w-4" />
+            {t.text}
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+
+  {/* Tranziția spre secțiunea deschisă: linia de flux, cu dash-urile curgând */}
+  <div class="mx-auto max-w-6xl px-5 pb-10 md:px-8">
+    <FlowLine tone="dark" animat />
+  </div>
+</section>

@@ -1,0 +1,87 @@
+---
+/*
+  Footer discret pe petrol: logo dark, date firmă (TODO CUI/adresă),
+  telefoane, program, ancore.
+*/
+import logoDark from '../assets/logo-principal-dark.svg';
+import { FIRMA } from '../lib/firma';
+
+const an = new Date().getFullYear();
+const linkuri = [
+  { href: '#servicii', text: 'Servicii' },
+  { href: '#proces', text: 'Cum lucrăm' },
+  { href: '#galerie', text: 'Galerie' },
+  { href: '#recenzii', text: 'Recenzii' },
+  { href: '#intrebari', text: 'Întrebări frecvente' },
+  { href: '#contact', text: 'Contact' },
+];
+---
+
+<footer class="footer bg-petrol pb-10 text-portelan">
+  <div class="mx-auto max-w-6xl px-5 pt-4 md:px-8">
+    <div class="grid gap-10 md:grid-cols-4 md:gap-8">
+      <div class="md:col-span-2">
+        <img src={logoDark.src} width="873" height="269" alt="Desfundări Canalizări — București, Ilfov, non-stop" class="h-20 w-auto" loading="lazy" />
+        <p class="mt-4 max-w-sm text-caption text-muted-dark">
+          Desfundări canalizare, inspecție video, curățare țevi, vidanjare și reparații — non-stop,
+          în București și Ilfov.
+        </p>
+        <p class="mt-4 text-caption text-muted-dark">
+          {/* TODO: completează CUI și adresa firmei în src/lib/firma.ts */}
+          {FIRMA.cui ? `CUI ${FIRMA.cui}` : 'CUI: TODO'} · {FIRMA.adresa || 'Adresă sediu: TODO'}
+        </p>
+      </div>
+
+      <div>
+        <p class="eyebrow text-muted-dark">Telefon</p>
+        <ul class="mt-4 space-y-2">
+          <li>
+            <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="f-link font-mono font-medium">
+              {FIRMA.telefonPrincipal.afisare}
+            </a>
+          </li>
+          <li>
+            <a href={`tel:${FIRMA.telefonSecundar.tel}`} class="f-link font-mono font-medium">
+              {FIRMA.telefonSecundar.afisare}
+            </a>
+          </li>
+        </ul>
+        <p class="mt-4 text-caption text-muted-dark">Program: non-stop, 24/7, inclusiv weekend și sărbători</p>
+      </div>
+
+      <nav aria-label="Linkuri în pagină">
+        <p class="eyebrow text-muted-dark">Pe pagină</p>
+        <ul class="mt-4 space-y-2">
+          {
+            linkuri.map((l) => (
+              <li>
+                <a href={l.href} class="f-link text-caption">
+                  {l.text}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+
+    <p class="mt-12 border-t border-t-[color-mix(in_srgb,var(--color-gri-fonta)_30%,var(--color-petrol))] pt-6 text-caption text-muted-dark">
+      © {an} {FIRMA.nume} · Non-stop · București & Ilfov
+    </p>
+  </div>
+</footer>
+
+<style>
+  .f-link {
+    color: var(--color-portelan);
+    text-underline-offset: 4px;
+    transition: opacity var(--dur-quick) var(--ease-flux);
+  }
+  .f-link:hover {
+    opacity: 0.75;
+    text-decoration: underline;
+  }
+  .f-link:active {
+    opacity: 0.6;
+  }
+</style>

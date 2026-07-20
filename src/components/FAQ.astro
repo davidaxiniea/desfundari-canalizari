@@ -1,0 +1,95 @@
+---
+/*
+  FAQ în accordion nativ (<details name="faq"> — un singur răspuns deschis,
+  navigabil din tastatură fără JS). Aceeași listă generează schema FAQPage.
+*/
+import Icon from './Icon.astro';
+import Eyebrow from './Eyebrow.astro';
+
+const intrebari = [
+  {
+    q: 'Cât costă o desfundare?',
+    a: 'Depinde de blocaj, așa că nu dăm un preț nevăzut, la telefon. Venim, ne uităm și îți spunem cât costă înainte să începem. Prețul spus e prețul plătit.',
+  },
+  {
+    q: 'Veniți și noaptea sau în weekend?',
+    a: 'Da, oricând: noapte, weekend, sărbători. Același preț, fără taxă de urgență.',
+  },
+  {
+    q: 'Cât de repede ajungeți?',
+    a: 'De obicei în aceeași zi. La telefon îți spunem un interval de sosire realist, în funcție de zonă.',
+  },
+  {
+    q: 'Faceți factură?',
+    a: 'Da, la fiecare intervenție. Pentru persoane fizice și pentru firme.',
+  },
+  {
+    q: 'Lucrați cu asociații de proprietari?',
+    a: 'Da, avem contracte cu asociații și restaurante: intervenții pe coloane, curățare periodică, factură și proces-verbal la fiecare lucrare.',
+  },
+  {
+    q: 'Ce e inspecția video?',
+    a: 'O cameră care intră în țeavă și arată pe ecran unde e problema: rădăcini, țeavă spartă, depuneri. Așa reparăm fix unde trebuie, fără să spargem pe ghicite.',
+  },
+  {
+    q: 'Ce zone acoperiți?',
+    a: 'Tot Bucureștiul și tot Ilfovul: sectoarele 1–6, Voluntari, Popești-Leordeni, Otopeni, Bragadiru și restul localităților.',
+  },
+];
+
+// Schema FAQPage — generată din aceleași întrebări, ca să nu divergă de conținutul vizibil
+const schemaFaq = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: intrebari.map((i) => ({
+    '@type': 'Question',
+    name: i.q,
+    acceptedAnswer: { '@type': 'Answer', text: i.a },
+  })),
+};
+---
+
+<section id="intrebari" class="bg-abur">
+  <div class="mx-auto max-w-3xl px-5 py-16 md:px-8 md:py-24">
+    <div data-reveal>
+      <Eyebrow num="06" text="Întrebări frecvente" />
+      <h2 class="mt-4 text-h2">Răspunsuri scurte, fără ocolișuri.</h2>
+    </div>
+
+    <div class="mt-8 divide-y divide-gri-fonta/35 border-y border-gri-fonta/35" data-reveal>
+      {
+        intrebari.map((i) => (
+          <details name="faq" class="faq group">
+            <summary class="flex cursor-pointer items-center justify-between gap-4 py-5 text-h3 font-medium">
+              {i.q}
+              <Icon name="chevron" class="h-5 w-5 shrink-0 transition-transform duration-200 group-open:rotate-180" />
+            </summary>
+            <p class="faq-a pb-5 text-muted-light">{i.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>
+
+<script type="application/ld+json" set:html={JSON.stringify(schemaFaq)} />
+
+<style>
+  /* Fără marker implicit de listă pe summary */
+  .faq summary::-webkit-details-marker {
+    display: none;
+  }
+  .faq summary {
+    list-style: none;
+    transition: opacity var(--dur-quick) var(--ease-flux);
+  }
+  .faq summary:hover {
+    opacity: 0.75;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq svg {
+      transition: none;
+    }
+  }
+</style>

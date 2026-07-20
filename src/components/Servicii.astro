@@ -1,0 +1,118 @@
+---
+/*
+  Secțiunea centrală: 6 servicii în carduri, fiecare cu icon line, descriere
+  concretă și micro-verdict în vocea brandului.
+*/
+import Icon from './Icon.astro';
+import Eyebrow from './Eyebrow.astro';
+import { FIRMA } from '../lib/firma';
+
+const servicii = [
+  {
+    icon: 'pompa',
+    titlu: 'Desfundări canalizare',
+    text: 'Deblocăm chiuvete, WC-uri, coloane de bloc și rețele exterioare. Orice blocaj, orice diametru.',
+    verdict: 'Curge.',
+  },
+  {
+    icon: 'camera',
+    titlu: 'Inspecție video canalizare',
+    text: 'Camera intră în țeavă și vezi pe ecran exact unde e problema. Fără spart pe ghicite.',
+    verdict: 'Clar.',
+  },
+  {
+    icon: 'cheie',
+    titlu: 'Reparații canalizare',
+    text: 'Înlocuim țevile sparte, refacem pantele și garniturile. Lăsăm totul curat în urmă.',
+    verdict: 'Ține.',
+  },
+  {
+    icon: 'jet',
+    titlu: 'Curățare țevi',
+    text: 'Spălăm țeava cu jet de mare presiune (hidrojet). Grăsimea și calcarul dispar de pe tot traseul.',
+    verdict: 'Liber.',
+  },
+  {
+    icon: 'camion',
+    titlu: 'Vidanjare',
+    text: 'Golim fose septice, bazine și separatoare de grăsimi. Venim cu utilajul nostru, pe programul tău.',
+    verdict: 'Gol.',
+  },
+  {
+    icon: 'luna',
+    titlu: 'Non-stop 24/7',
+    text: 'Noapte, weekend, sărbători — venim oricând, la același preț. Fără taxe de urgență.',
+    verdict: 'Venim.',
+  },
+] as const;
+---
+
+<section id="servicii" class="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
+  <div data-reveal>
+    <Eyebrow num="03" text="Servicii" />
+    <h2 class="mt-4 max-w-2xl text-h2">Ce rezolvăm.</h2>
+    <p class="mt-4 max-w-2xl text-muted-light">
+      Orice problemă de canalizare, de la chiuveta de acasă la rețeaua unui restaurant. La fel de
+      fiecare dată: vedem, spunem prețul, rezolvăm.
+    </p>
+  </div>
+
+  <div class="mt-10 grid gap-4 md:grid-cols-2 md:gap-6">
+    {
+      servicii.map((s) => (
+        <article class="card-industrial colturi card-tilt flex flex-col bg-abur p-6 md:p-8" data-reveal>
+          <Icon name={s.icon} class="h-7 w-7" />
+          <h3 class="mt-4 text-h3">{s.titlu}</h3>
+          <p class="mt-2 text-muted-light">{s.text}</p>
+          <p class="mt-3 font-medium">{s.verdict}</p>
+
+          <div class="mt-5 flex items-center gap-5 border-t border-portelan pt-4 text-caption">
+            <a class="link-discret font-medium" href="#contact">
+              Cere ofertă
+            </a>
+            <a class="link-discret font-mono font-medium" href={`tel:${FIRMA.telefonPrincipal.tel}`}>
+              {FIRMA.telefonPrincipal.afisare}
+            </a>
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<script>
+  // Tilt 3D subtil pe carduri — doar pe device-uri cu hover și fără reduced-motion
+  if (window.matchMedia('(hover: hover) and (prefers-reduced-motion: no-preference)').matches) {
+    document.querySelectorAll<HTMLElement>('.card-tilt').forEach((card) => {
+      card.addEventListener('pointerenter', () => {
+        card.style.transition = 'transform 150ms ease-out';
+      });
+      card.addEventListener('pointermove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `perspective(700px) rotateX(${(-y * 3).toFixed(2)}deg) rotateY(${(x * 3).toFixed(2)}deg) translateY(-2px)`;
+      });
+      card.addEventListener('pointerleave', () => {
+        card.style.transition = 'transform 300ms ease-out';
+        card.style.transform = '';
+        card.addEventListener('transitionend', () => (card.style.transition = ''), { once: true });
+      });
+    });
+  }
+</script>
+
+<style>
+  .link-discret {
+    color: var(--color-petrol);
+    text-underline-offset: 4px;
+    transition: opacity var(--dur-quick) var(--ease-flux);
+  }
+  .link-discret:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+  }
+  .link-discret:active {
+    opacity: 0.65;
+  }
+</style>

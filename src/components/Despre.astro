@@ -1,0 +1,50 @@
+---
+/*
+  Prezentare scurtă: ce rezolvăm, de ce ne sună lumea, plus 4 cifre-cheie.
+  Fără „istoria firmei" — concret peste adjective.
+*/
+import Eyebrow from './Eyebrow.astro';
+
+const cifre = [
+  { valoare: '24/7', eticheta: 'Disponibili non-stop, inclusiv sărbători' },
+  { valoare: '5.0', eticheta: 'Rating Google, din 18 recenzii' },
+  { valoare: 'B + IF', eticheta: 'București și Ilfov, acoperire completă' },
+  { valoare: 'Preț fix', eticheta: 'Spus înainte să începem, nu după' },
+];
+---
+
+<section id="despre" class="bg-abur">
+  <div class="mx-auto grid max-w-6xl gap-12 px-5 py-16 md:grid-cols-2 md:gap-16 md:px-8 md:py-24">
+    <div data-reveal>
+      <Eyebrow num="04" text="Despre noi" />
+      <h2 class="mt-4 text-h2">Firma care răspunde calm și la 2 noaptea.</h2>
+
+      <div class="mt-6 space-y-4 text-muted-light">
+        <p>
+          Deblocăm și reparăm canalizări. Doar asta facem. Chiuvete, WC-uri, coloane de bloc,
+          rețele exterioare — le vedem zilnic și știm să le rezolvăm.
+        </p>
+        <p>
+          Nu ghicim. Camera video intră în țeavă și arată exact unde e problema. Vezi și tu
+          imaginea, afli prețul, abia apoi începem. Suma stabilită e suma plătită.
+        </p>
+        <p>
+          Răspundem non-stop, oriunde în București și Ilfov. Pentru asociații de proprietari și
+          restaurante: contracte de mentenanță și factură la fiecare lucrare. Ajungem azi.
+          Rezolvăm azi.
+        </p>
+      </div>
+    </div>
+
+    <div class="grid content-start gap-4 sm:grid-cols-2" data-reveal>
+      {
+        cifre.map((c) => (
+          <div class="card-industrial colturi bg-portelan p-6">
+            <p class="text-h2">{c.valoare}</p>
+            <p class="mt-2 text-caption text-muted-light">{c.eticheta}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

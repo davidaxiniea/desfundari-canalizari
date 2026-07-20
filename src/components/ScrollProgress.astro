@@ -1,0 +1,72 @@
+---
+/*
+  Linia de flux ca progres de scroll: șină punctată fixă sus, peste care
+  „curge" linia portocalie cu bila în vârf pe măsură ce parcurgi pagina.
+  Scroll-driven (oglindește poziția utilizatorului), deci nu e mișcare autonomă.
+*/
+---
+
+<div class="progres pointer-events-none fixed inset-x-0 top-0 z-50" aria-hidden="true">
+  <div class="sina"></div>
+  <div class="umplere"></div>
+  <div class="bila"></div>
+</div>
+
+<style>
+  .progres {
+    height: 3px;
+  }
+  /* Șina: punctată, discretă — „traseul" încă neparcurs */
+  .sina {
+    position: absolute;
+    inset: 0;
+    background-image: repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--color-gri-fonta) 55%, transparent) 0 3px,
+      transparent 3px 10px
+    );
+    opacity: 0.55;
+  }
+  .umplere {
+    position: absolute;
+    inset: 0;
+    background-color: var(--color-semnal);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+  .bila {
+    position: absolute;
+    top: -2.5px;
+    left: -4px;
+    width: 8px;
+    height: 8px;
+    border-radius: 9999px;
+    background-color: var(--color-semnal);
+    transform: translateX(0);
+  }
+</style>
+
+<script>
+  const umplere = document.querySelector<HTMLElement>('.progres .umplere')!;
+  const bila = document.querySelector<HTMLElement>('.progres .bila')!;
+  let programat = false;
+
+  const deseneaza = () => {
+    programat = false;
+    const maxim = document.documentElement.scrollHeight - window.innerHeight;
+    const p = maxim > 0 ? Math.min(window.scrollY / maxim, 1) : 0;
+    umplere.style.transform = `scaleX(${p})`;
+    bila.style.transform = `translateX(${p * window.innerWidth}px)`;
+  };
+
+  const laScroll = () => {
+    if (!programat) {
+      programat = true;
+      requestAnimationFrame(deseneaza);
+    }
+  };
+
+  deseneaza();
+  window.addEventListener('scroll', laScroll, { passive: true });
+  window.addEventListener('resize', laScroll, { passive: true });
+</script>

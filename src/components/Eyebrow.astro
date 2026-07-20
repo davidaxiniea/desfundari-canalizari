@@ -1,0 +1,27 @@
+---
+/*
+  Eyebrow industrial: index de secțiune în casetă + etichetă + hairline punctat
+  (reia motivul „blocaj" al liniei de flux).
+*/
+interface Props {
+  num: string;
+  text: string;
+  tone?: 'dark' | 'light';
+}
+const { num, text, tone = 'light' } = Astro.props;
+---
+
+<p class:list={['eyebrow flex items-center gap-3', tone === 'dark' ? 'text-muted-dark' : 'text-muted-light']}>
+  <span
+    class="num inline-flex h-6 min-w-6 items-center justify-center border px-1"
+    style={`border-color: ${tone === 'dark' ? 'var(--muchie-dark)' : 'var(--muchie-light)'}`}
+  >
+    {num}
+  </span>
+  {text}
+  <span
+    class="grow border-t border-dashed"
+    style={`border-color: ${tone === 'dark' ? 'var(--muchie-dark)' : 'var(--muchie-light)'}`}
+    aria-hidden="true"
+  ></span>
+</p>

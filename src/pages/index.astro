@@ -1,0 +1,38 @@
+---
+/*
+  Pagina unică — asamblarea secțiunilor, în ordinea de conversie:
+  hero → proces → galerie → servicii → despre → zone → FAQ → recenzii → contact.
+*/
+import Base from '../layouts/Base.astro';
+import Header from '../components/Header.astro';
+import CallBar from '../components/CallBar.astro';
+import ScrollProgress from '../components/ScrollProgress.astro';
+import Hero from '../components/Hero.astro';
+import Despre from '../components/Despre.astro';
+import Servicii from '../components/Servicii.astro';
+import Proces from '../components/Proces.astro';
+import Galerie from '../components/Galerie.astro';
+import Zone from '../components/Zone.astro';
+import Recenzii from '../components/Recenzii.astro';
+import FAQ from '../components/FAQ.astro';
+import Contact from '../components/Contact.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<Base>
+  <ScrollProgress />
+  <Header />
+  <main>
+    <Hero />
+    <Proces />
+    <Galerie />
+    <Servicii />
+    <Despre />
+    <Zone />
+    <FAQ />
+    <Recenzii />
+    <Contact />
+  </main>
+  <Footer />
+  <CallBar />
+</Base>

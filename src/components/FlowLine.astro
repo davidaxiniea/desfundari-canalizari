@@ -1,0 +1,39 @@
+---
+/*
+  Linia de flux — device-ul de brand: începe punctat (blocaj), o bilă, apoi
+  linie continuă portocalie (curge). Reutilizată ca separator între secțiuni-cheie.
+
+  Props:
+  - tone: 'dark' pentru fundal petrol, 'light' pentru fundal porțelan/abur
+  - animat: dash-urile „curg" încet spre bilă (ambient; oprit la reduced-motion)
+  - class: clase suplimentare de poziționare (lățime, margini)
+*/
+interface Props {
+  tone?: 'dark' | 'light';
+  animat?: boolean;
+  class?: string;
+}
+const { tone = 'light', animat = false, class: className = '' } = Astro.props;
+
+// Punctajul e discret: pe petrol, un gri scufundat în fundal; pe deschis, gri fontă
+const dashColor =
+  tone === 'dark' ? 'color-mix(in srgb, var(--color-gri-fonta) 55%, var(--color-petrol))' : 'var(--color-gri-fonta)';
+---
+
+<svg class={`block h-3 w-full ${className}`} aria-hidden="true">
+  {/* Sub-viewport: clipează natural dash-urile care „curg" (translateX -10→0) */}
+  <svg x="0" y="0" width="38.5%" height="12" style="overflow: hidden">
+    <line
+      class:list={[animat && 'flux-drift']}
+      x1="-12"
+      y1="6"
+      x2="110%"
+      y2="6"
+      stroke={dashColor}
+      stroke-width="2"
+      stroke-dasharray="2 8"
+      stroke-linecap="round"></line>
+  </svg>
+  <circle cx="41.5%" cy="6" r="4" fill="var(--color-semnal)"></circle>
+  <line x1="45%" y1="6" x2="100%" y2="6" stroke="var(--color-semnal)" stroke-width="2.5" stroke-linecap="round"></line>
+</svg>

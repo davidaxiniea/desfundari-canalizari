@@ -1,0 +1,112 @@
+---
+/*
+  „Cum lucrăm" — aici linia de flux e firul vizual: punctată la pasul 1 (blocaj),
+  bila înainte de pasul 4, apoi continuă portocalie (curge). Pe desktop linia e
+  orizontală deasupra pașilor; pe mobil devine șină verticală în stânga.
+  Markerii se aprind secvențial (.pas-marker + delay), apoi linia se umple.
+*/
+import Eyebrow from './Eyebrow.astro';
+
+const pasi = [
+  {
+    titlu: 'Suni.',
+    text: 'Răspundem la orice oră și îți spunem când ajungem. Un interval realist, nu „imediat".',
+  },
+  {
+    titlu: 'Evaluăm.',
+    text: 'Venim și ne uităm — cu camera video, dacă e nevoie. Îți spunem prețul, abia apoi începem.',
+  },
+  {
+    titlu: 'Rezolvăm.',
+    text: 'Desfundăm, curățăm sau reparăm. Vezi rezultatul pe loc.',
+  },
+  {
+    // Litera „u" portocalie — gestul din wordmark, repetat pe verdictul final
+    titlu: 'Curge.',
+    text: 'Plătești exact ce am stabilit. Totul rămâne funcțional și curat.',
+    final: true,
+  },
+];
+---
+
+<section id="proces" class="bg-abur">
+  <div class="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24" data-observe>
+    <div data-reveal>
+      <Eyebrow num="01" text="Cum lucrăm" />
+      <h2 class="mt-4 max-w-2xl text-h2">De la blocaj la curge, în patru pași.</h2>
+    </div>
+
+    {/* Desktop: linia de flux orizontală, cu markerii pașilor pe ea */}
+    <div class="relative mt-12 hidden h-10 md:block" aria-hidden="true">
+      <svg class="absolute inset-0 h-full w-full">
+        <line x1="0" y1="20" x2="68%" y2="20" stroke="var(--color-gri-fonta)" stroke-width="2" stroke-dasharray="2 9" stroke-linecap="round"></line>
+        <circle cx="70.5%" cy="20" r="5" fill="var(--color-semnal)"></circle>
+      </svg>
+      {/* Segmentul continuu se umple (scaleX) când secțiunea intră în viewport */}
+      <div class="flux-fill absolute top-[18.75px] right-0 left-[73%] h-[2.5px] rounded-full bg-semnal"></div>
+      {
+        pasi.map((p, i) => (
+          <span
+            class:list={[
+              'pas-marker absolute top-0 flex h-10 w-10 items-center justify-center rounded-full font-medium',
+              p.final ? 'bg-semnal text-petrol' : 'bg-petrol text-portelan',
+            ]}
+            style={`left: calc(${12.5 + i * 25}% - 1.25rem); transition-delay: ${i * 180}ms`}
+          >
+            {i + 1}
+          </span>
+        ))
+      }
+    </div>
+
+    <ol class="mt-6 grid gap-0 md:grid-cols-4 md:gap-8">
+      {
+        pasi.map((p, i) => (
+          <li class="pas relative pb-10 pl-14 md:p-0 md:text-center" data-reveal>
+            {/* Mobil: marker + șină verticală; pe desktop markerii stau pe linia de sus */}
+            <span
+              class:list={[
+                'pas-marker absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-full font-medium md:hidden',
+                p.final ? 'bg-semnal text-petrol' : 'bg-petrol text-portelan',
+              ]}
+              style={`transition-delay: ${i * 180}ms`}
+              aria-hidden="true"
+            >
+              {i + 1}
+            </span>
+            <h3 class="text-h3">
+              {p.final ? (
+                <>
+                  C<span class="text-semnal">u</span>rge.
+                </>
+              ) : (
+                p.titlu
+              )}
+            </h3>
+            <p class="mt-2 text-caption text-muted-light md:mx-auto md:max-w-52">{p.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </div>
+</section>
+
+<style>
+  /* Șina verticală pe mobil: punctată între pașii 1–3, continuă portocalie spre „Curge." */
+  @media (max-width: 767px) {
+    .pas:not(:last-child)::before {
+      content: '';
+      position: absolute;
+      left: 19px;
+      top: 44px;
+      bottom: 4px;
+      border-left: 2px dashed var(--color-gri-fonta);
+    }
+    .pas:nth-last-child(2)::before {
+      border-left: 2px solid var(--color-semnal);
+    }
+    .pas:last-child {
+      padding-bottom: 0;
+    }
+  }
+</style>

@@ -1,0 +1,32 @@
+---
+/*
+  Pagina de confirmare după trimiterea formularului (Netlify Forms
+  redirecționează aici prin `action="/multumim"`).
+*/
+import Base from '../layouts/Base.astro';
+import FlowLine from '../components/FlowLine.astro';
+import Icon from '../components/Icon.astro';
+import { FIRMA } from '../lib/firma';
+---
+
+<Base noindex>
+  <main class="flex min-h-screen items-center bg-petrol text-portelan">
+    <div class="mx-auto w-full max-w-2xl px-5 py-24 md:px-8">
+      <p class="eyebrow text-muted-dark">Cerere trimisă</p>
+      <h1 class="text-display mt-4">Am primit. Revenim c<span class="text-semnal">u</span> un apel.</h1>
+      <p class="mt-6 text-h3 text-muted-dark">
+        Te sunăm în aceeași zi. Dacă între timp devine urgent, nu aștepta:
+      </p>
+      <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="btn-semnal mt-8 text-h3">
+        <Icon name="telefon" class="h-5 w-5" />
+        Sună <span class="font-mono">{FIRMA.telefonPrincipal.afisare}</span>
+      </a>
+      <div class="mt-14">
+        <FlowLine tone="dark" />
+      </div>
+      <a href={import.meta.env.BASE_URL} class="mt-8 inline-block text-caption text-muted-dark underline underline-offset-4 hover:text-portelan">
+        Înapoi la pagina principală
+      </a>
+    </div>
+  </main>
+</Base>

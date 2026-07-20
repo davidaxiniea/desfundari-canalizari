@@ -1,0 +1,193 @@
+---
+/*
+  CTA final pe petrol: verdictul mare, ambele numere de telefon (mono),
+  formular scurt prin Netlify Forms (secundar — telefonul rămâne CTA-ul primar).
+*/
+import Icon from './Icon.astro';
+import FlowLine from './FlowLine.astro';
+import Eyebrow from './Eyebrow.astro';
+import Disponibil from './Disponibil.astro';
+import { FIRMA } from '../lib/firma';
+---
+
+<section id="contact" class="bg-petrol text-portelan">
+  <div class="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
+    <div data-reveal>
+      <Eyebrow num="08" text="Contact" tone="dark" />
+      <h2 class="text-display mt-4 max-w-2xl">
+        Țeavă înfundată? În câteva ore c<span class="text-semnal">u</span>rge.
+      </h2>
+      <Disponibil class="mt-5 text-muted-dark" />
+    </div>
+
+    <div class="mt-12 grid gap-12 md:grid-cols-2 md:gap-16">
+      <div data-reveal>
+        <div class="flex flex-wrap items-baseline gap-3">
+          <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="tel-mare font-mono text-h2 md:text-[2.25rem]">
+            {FIRMA.telefonPrincipal.afisare}
+          </a>
+          <button type="button" class="copiaza hidden md:inline-flex" data-numar={FIRMA.telefonPrincipal.afisare}>
+            Copiază
+          </button>
+        </div>
+        <p class="mt-1 text-caption text-muted-dark">Numărul principal, non-stop</p>
+
+        <div class="mt-6 flex flex-wrap items-baseline gap-3">
+          <a href={`tel:${FIRMA.telefonSecundar.tel}`} class="tel-mare font-mono text-h3">
+            {FIRMA.telefonSecundar.afisare}
+          </a>
+          <button type="button" class="copiaza hidden md:inline-flex" data-numar={FIRMA.telefonSecundar.afisare}>
+            Copiază
+          </button>
+        </div>
+        <p class="mt-1 text-caption text-muted-dark">Al doilea număr, dacă primul e ocupat</p>
+
+        <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="btn-semnal mt-8 text-h3">
+          <Icon name="telefon" class="h-5 w-5" />
+          Sună acum
+        </a>
+
+        <ul class="mt-10 space-y-3 text-caption text-muted-dark">
+          <li class="flex items-center gap-2">
+            <Icon name="ceas" class="h-4 w-4" /> Non-stop: 24/7, inclusiv weekend și sărbători
+          </li>
+          <li class="flex items-center gap-2">
+            <Icon name="pin" class="h-4 w-4" /> București, sectoarele 1–6, și tot județul Ilfov
+          </li>
+          <li class="flex items-center gap-2">
+            <Icon name="factura" class="h-4 w-4" /> Factură la fiecare intervenție, contracte pentru asociații și firme
+          </li>
+        </ul>
+      </div>
+
+      {/*
+        Formular prin Netlify Forms: după primul deploy, activează notificările
+        pe email din Netlify → Forms → Notifications (emailul firmei).
+      */}
+      <form
+        name="cerere-oferta"
+        method="POST"
+        data-netlify="true"
+        netlify-honeypot="bot-field"
+        action={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/multumim`}
+        class="content-start gap-4 md:grid"
+        data-reveal
+      >
+        <input type="hidden" name="form-name" value="cerere-oferta" />
+        <p class="hidden">
+          <label>Nu completa: <input name="bot-field" /></label>
+        </p>
+
+        <p class="text-caption text-muted-dark">
+          Nu e urgent? Lasă-ne un mesaj și revenim cu un apel în aceeași zi.
+        </p>
+
+        <div class="mt-4 md:mt-0">
+          <label for="nume" class="text-caption font-medium">Nume</label>
+          <input id="nume" name="nume" type="text" autocomplete="name" class="camp mt-1.5" />
+        </div>
+
+        <div class="mt-4 md:mt-0">
+          <label for="telefon" class="text-caption font-medium">Telefon</label>
+          <input id="telefon" name="telefon" type="tel" autocomplete="tel" required class="camp mt-1.5 font-mono" />
+        </div>
+
+        <div class="mt-4 md:mt-0">
+          <label for="mesaj" class="text-caption font-medium">Ce problemă ai?</label>
+          <textarea id="mesaj" name="mesaj" rows="4" class="camp mt-1.5"></textarea>
+        </div>
+
+        <button type="submit" class="btn-outline-dark mt-5 md:mt-1 md:justify-self-start">
+          Trimite cererea
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="mx-auto max-w-6xl px-5 pb-12 md:px-8">
+    <FlowLine tone="dark" animat />
+  </div>
+</section>
+
+<script>
+  // Click-to-copy pe numere (util pe desktop); feedback în vocea brandului
+  document.querySelectorAll<HTMLButtonElement>('.copiaza').forEach((btn) => {
+    btn.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(btn.dataset.numar!);
+        btn.textContent = 'Copiat.';
+        btn.classList.add('ok');
+        setTimeout(() => {
+          btn.textContent = 'Copiază';
+          btn.classList.remove('ok');
+        }, 2000);
+      } catch {
+        /* clipboard indisponibil (http, permisiuni) — butonul rămâne pasiv */
+      }
+    });
+  });
+</script>
+
+<style>
+  .copiaza {
+    align-items: center;
+    border: 1px dashed var(--muchie-dark);
+    border-radius: var(--radius-ui);
+    color: var(--text-muted-on-dark);
+    font-size: var(--text-caption);
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    transition:
+      border-color var(--dur-quick) var(--ease-flux),
+      color var(--dur-quick) var(--ease-flux);
+  }
+  .copiaza:hover {
+    border-color: var(--color-portelan);
+    color: var(--color-portelan);
+  }
+  .copiaza:active {
+    transform: translateY(1px);
+  }
+  /* „Copiat." — bordura devine continuă: micro-gestul blocaj → curge */
+  .copiaza.ok {
+    border-style: solid;
+    border-color: var(--color-semnal);
+    color: var(--color-portelan);
+  }
+
+  .tel-mare {
+    display: inline-block;
+    color: var(--color-portelan);
+    transition: opacity var(--dur-quick) var(--ease-flux);
+  }
+  .tel-mare:hover {
+    opacity: 0.8;
+  }
+  .tel-mare:active {
+    opacity: 0.65;
+  }
+
+  .camp {
+    display: block;
+    width: 100%;
+    border-radius: var(--radius-ui);
+    border: 1px solid color-mix(in srgb, var(--color-portelan) 35%, var(--color-petrol));
+    background-color: color-mix(in srgb, var(--color-portelan) 6%, var(--color-petrol));
+    /* Adâncitură prelucrată: umbră interioară discretă */
+    box-shadow: inset 0 2px 4px color-mix(in srgb, var(--color-petrol) 55%, transparent);
+    color: var(--color-portelan);
+    padding: 0.75rem 1rem;
+    transition: border-color var(--dur-quick) var(--ease-flux);
+  }
+  .camp:hover {
+    border-color: color-mix(in srgb, var(--color-portelan) 60%, var(--color-petrol));
+  }
+  .camp:focus {
+    border-color: var(--color-portelan);
+    outline: none;
+  }
+  .camp:focus-visible {
+    outline: 2px solid var(--color-semnal);
+    outline-offset: 2px;
+  }
+</style>

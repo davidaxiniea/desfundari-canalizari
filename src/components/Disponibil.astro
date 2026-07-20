@@ -1,0 +1,35 @@
+---
+/*
+  Cip live „Disponibili acum" + ora exactă a Bucureștiului.
+  Dovadă concretă pentru non-stop: pagina știe cât e ceasul și tot răspundem.
+*/
+interface Props {
+  class?: string;
+}
+const { class: className = '' } = Astro.props;
+---
+
+<span class={`chip-live ${className}`}>
+  <span class="punct" aria-hidden="true"></span>
+  Disponibili acum
+  <span aria-hidden="true">·</span>
+  <time class="ora-bucuresti" datetime=""></time>
+</span>
+
+<script>
+  // Ceasul Bucureștiului, actualizat din 15 în 15 secunde (precizie de minut)
+  const format = new Intl.DateTimeFormat('ro-RO', {
+    hour: '2-digit',
+    minute: '2-digit',
+    timeZone: 'Europe/Bucharest',
+  });
+  const actualizeaza = () => {
+    const acum = new Date();
+    document.querySelectorAll<HTMLTimeElement>('.ora-bucuresti').forEach((el) => {
+      el.textContent = format.format(acum);
+      el.dateTime = acum.toISOString();
+    });
+  };
+  actualizeaza();
+  setInterval(actualizeaza, 15_000);
+</script>

@@ -1,0 +1,399 @@
+@import 'tailwindcss';
+
+/*
+  Design tokens — sistemul de brand Desfundări Canalizări.
+  Exact 5 culori. Nu adăuga altele; nuanțele derivate se fac DOAR prin color-mix
+  din aceste 5 (vezi -muted mai jos, corecții de contrast AA).
+
+  Direcție vizuală: industrial dar familiar — colțuri aproape drepte, muchii
+  „prelucrate" (borduri 1px + highlight interior), hairline-uri punctate care
+  reiau motivul „blocaj → curge" al liniei de flux.
+*/
+@theme {
+  --color-petrol: #103a43;    /* dominant 60% — fundal secțiuni închise, text pe deschis */
+  --color-portelan: #f4f1ea;  /* secundar 25% — fundalul paginii, NU alb pur */
+  --color-gri-fonta: #8a939b; /* neutru 10% — linii, borduri, metadate */
+  --color-semnal: #e87a2e;    /* accent 4% — DOAR CTA de sunat, litera „u", linia de flux */
+  --color-abur: #d9e4e4;      /* balans 1% — carduri deschise, separatoare */
+
+  --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', monospace;
+
+  /* Colț industrial: aproape drept, dar nu tăios */
+  --radius-ui: 4px;
+
+  /* Treptele de mărime — exact 5 */
+  --text-display: clamp(2.75rem, 1.9rem + 3.6vw, 4rem); /* 44–64px */
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.03em;
+  --text-h2: 1.75rem;      /* 28px */
+  --text-h2--line-height: 1.2;
+  --text-h3: 1.125rem;     /* 18px */
+  --text-h3--line-height: 1.4;
+  --text-body: 1rem;       /* 16px */
+  --text-body--line-height: 1.6;
+  --text-caption: 0.8125rem; /* 13px */
+  --text-caption--line-height: 1.5;
+
+  --ease-flux: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --dur-quick: 180ms;
+  --dur-reveal: 600ms;
+}
+
+/*
+  Tente derivate pentru contrast AA (nu sunt culori noi, sunt amestecuri din cele 5):
+  - gri-fonta pur pe porțelan are ~2.8:1 → prea slab pentru text; folosim petrol atenuat.
+  - gri-fonta pur pe petrol are ~3.9:1 → îl deschidem cu porțelan pentru metadate mici.
+*/
+:root {
+  --text-muted-on-light: color-mix(in srgb, var(--color-petrol) 76%, var(--color-portelan));
+  --text-muted-on-dark: color-mix(in srgb, var(--color-gri-fonta) 52%, var(--color-portelan));
+  --muchie-light: color-mix(in srgb, var(--color-gri-fonta) 30%, transparent);
+  --muchie-dark: color-mix(in srgb, var(--color-portelan) 22%, transparent);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* ancorele se opresc sub headerul sticky */
+  scroll-padding-top: 5.5rem;
+}
+
+body {
+  background-color: var(--color-portelan);
+  color: var(--color-petrol);
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Titlurile: Inter Medium, sentence case — niciodată bold, niciodată all-caps */
+h1, h2, h3 {
+  font-weight: 500;
+}
+
+::selection {
+  background-color: var(--color-abur);
+  color: var(--color-petrol);
+}
+
+/* Focus vizibil pe orice element interactiv */
+:focus-visible {
+  outline: 2px solid var(--color-semnal);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* ---------- Tipografie: cele 5 trepte + eyebrow ---------- */
+
+@utility text-display {
+  font-size: var(--text-display);
+  line-height: var(--text-display--line-height);
+  letter-spacing: var(--text-display--letter-spacing);
+  font-weight: 500;
+}
+
+@utility eyebrow {
+  font-size: var(--text-caption);
+  line-height: var(--text-caption--line-height);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+@utility text-muted-light {
+  color: var(--text-muted-on-light);
+}
+
+@utility text-muted-dark {
+  color: var(--text-muted-on-dark);
+}
+
+/* ---------- Butoane glossy — muchie prelucrată + luciu + sheen la hover ---------- */
+
+/* Butonul de acțiune — singurul loc unde portocaliul e suprafață */
+@utility btn-semnal {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  color: var(--color-petrol);
+  font-weight: 500;
+  border-radius: var(--radius-ui);
+  padding: 0.875rem 1.5rem;
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-semnal) 78%, var(--color-portelan)) 0%,
+    var(--color-semnal) 45%,
+    color-mix(in srgb, var(--color-semnal) 84%, var(--color-petrol)) 100%
+  );
+  border: 1px solid color-mix(in srgb, var(--color-semnal) 62%, var(--color-petrol));
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, var(--color-portelan) 45%, transparent),
+    inset 0 -2px 3px color-mix(in srgb, var(--color-petrol) 15%, transparent),
+    0 2px 8px -2px color-mix(in srgb, var(--color-petrol) 35%, transparent);
+  transition:
+    transform var(--dur-quick) var(--ease-flux),
+    box-shadow var(--dur-quick) var(--ease-flux),
+    filter var(--dur-quick) var(--ease-flux);
+
+  &:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.04);
+    box-shadow:
+      inset 0 1px 0 color-mix(in srgb, var(--color-portelan) 55%, transparent),
+      inset 0 -2px 3px color-mix(in srgb, var(--color-petrol) 15%, transparent),
+      0 5px 14px -3px color-mix(in srgb, var(--color-petrol) 40%, transparent);
+  }
+  &:active {
+    transform: translateY(1px);
+    filter: brightness(0.96);
+    box-shadow:
+      inset 0 2px 4px color-mix(in srgb, var(--color-petrol) 30%, transparent),
+      0 1px 3px -1px color-mix(in srgb, var(--color-petrol) 25%, transparent);
+  }
+
+  /* Sheen: o dâră de lumină mătură butonul la hover */
+  &::after {
+    content: '';
+    position: absolute;
+    top: -2px;
+    bottom: -2px;
+    left: 0;
+    width: 36%;
+    background: linear-gradient(
+      105deg,
+      transparent,
+      color-mix(in srgb, var(--color-portelan) 55%, transparent) 50%,
+      transparent
+    );
+    transform: translateX(-140%) skewX(-18deg);
+    opacity: 0;
+    pointer-events: none;
+  }
+  &:hover::after {
+    animation: sheen 700ms var(--ease-flux);
+  }
+}
+
+/* Buton secundar „glass" — contur cu luciu discret, pe fundal petrol */
+@utility btn-outline-dark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.625rem;
+  border: 1px solid color-mix(in srgb, var(--color-portelan) 40%, var(--color-petrol));
+  color: var(--color-portelan);
+  font-weight: 500;
+  border-radius: var(--radius-ui);
+  padding: 0.875rem 1.5rem;
+  background-image: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-portelan) 10%, transparent),
+    color-mix(in srgb, var(--color-portelan) 3%, transparent)
+  );
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-portelan) 22%, transparent);
+  transition:
+    transform var(--dur-quick) var(--ease-flux),
+    border-color var(--dur-quick) var(--ease-flux),
+    background-color var(--dur-quick) var(--ease-flux);
+
+  &:hover {
+    transform: translateY(-1px);
+    border-color: var(--color-portelan);
+    background-color: color-mix(in srgb, var(--color-portelan) 8%, transparent);
+  }
+  &:active {
+    transform: translateY(1px);
+  }
+}
+
+@keyframes sheen {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(420%) skewX(-18deg);
+    opacity: 0;
+  }
+}
+
+/* ---------- Detalii industriale ---------- */
+
+/* Colțare de desen tehnic pe carduri (două ticuri discrete) */
+.colturi {
+  position: relative;
+}
+.colturi::before,
+.colturi::after {
+  content: '';
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: color-mix(in srgb, var(--color-gri-fonta) 70%, transparent);
+  pointer-events: none;
+}
+.colturi::before {
+  top: 8px;
+  left: 8px;
+  border-top: 1.5px solid;
+  border-left: 1.5px solid;
+}
+.colturi::after {
+  bottom: 8px;
+  right: 8px;
+  border-bottom: 1.5px solid;
+  border-right: 1.5px solid;
+}
+
+/* Muchie prelucrată pe cardurile deschise */
+@utility card-industrial {
+  border-radius: var(--radius-ui);
+  border: 1px solid var(--muchie-light);
+  box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-portelan) 60%, transparent);
+}
+
+/* Cipul live „Disponibili acum" — puls calm, nu alarmă */
+.chip-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px dashed color-mix(in srgb, var(--color-gri-fonta) 55%, transparent);
+  border-radius: var(--radius-ui);
+  padding: 0.375rem 0.75rem;
+  font-size: var(--text-caption);
+  font-weight: 500;
+}
+.chip-live .punct {
+  width: 7px;
+  height: 7px;
+  border-radius: 9999px;
+  background-color: var(--color-semnal);
+  animation: puls 2.4s var(--ease-flux) infinite;
+}
+@keyframes puls {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.45;
+    transform: scale(0.72);
+  }
+}
+
+/* Ceasul din cip: cifre tabulare ca să nu tremure la schimbare */
+.chip-live time {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- Mișcare ---------- */
+
+/* Reveal la scroll — doar opacity + transform. Starea ascunsă se aplică DOAR
+   când JS rulează (html.js, setat în <head>): fără JS, totul rămâne vizibil. */
+html.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity var(--dur-reveal) var(--ease-flux),
+    transform var(--dur-reveal) var(--ease-flux);
+}
+
+html.js [data-reveal].in-view {
+  opacity: 1;
+  transform: none;
+}
+
+/* Linia de flux din „Cum lucrăm": segmentul continuu se „umple" prin scaleX,
+   după ce markerii pașilor s-au aprins */
+html.js .flux-fill {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 900ms var(--ease-flux) 850ms;
+}
+
+.in-view .flux-fill,
+.flux-fill.in-view {
+  transform: scaleX(1);
+}
+
+/* Markerii pașilor se aprind secvențial (delay-uri inline, per pas) */
+html.js [data-observe] .pas-marker {
+  opacity: 0;
+  transform: scale(0.5);
+  transition:
+    opacity 350ms var(--ease-flux),
+    transform 350ms var(--ease-flux);
+}
+html.js [data-observe].in-view .pas-marker {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Dash-urile liniei de flux „curg" spre bilă (ambient, pe hero și contact) */
+.flux-drift {
+  animation: flux-drift 1.1s linear infinite;
+}
+@keyframes flux-drift {
+  from {
+    transform: translateX(-10px);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* Răspunsul din FAQ intră cu un fade scurt */
+details[open] .faq-a {
+  animation: faq-in 250ms var(--ease-flux);
+}
+@keyframes faq-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Pe mobil, conținutul nu se ascunde sub bara sticky de apel */
+@media (max-width: 767px) {
+  body {
+    padding-bottom: 5.25rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  html.js [data-reveal],
+  html.js .flux-fill,
+  html.js [data-observe] .pas-marker {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .flux-drift,
+  .chip-live .punct {
+    animation: none;
+  }
+  details[open] .faq-a {
+    animation: none;
+  }
+  .btn-semnal:hover::after {
+    animation: none;
+  }
+  .btn-semnal:hover,
+  .btn-outline-dark:hover {
+    transform: none;
+  }
+}

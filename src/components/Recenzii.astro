@@ -1,0 +1,71 @@
+---
+/*
+  Dovadă socială: 3 carduri de recenzie (placeholder — se înlocuiesc cu recenzii
+  reale de pe Google, NU se inventează) + badge-ul 5.0 · 18 recenzii.
+*/
+import Icon from './Icon.astro';
+import Eyebrow from './Eyebrow.astro';
+import { FIRMA } from '../lib/firma';
+
+// TODO recenzie reală: copiază 3 recenzii de pe profilul Google Business
+// (text + prenumele autorului). Nu inventa recenzii — e ilegal și se vede.
+const recenzii = [
+  { text: 'TODO recenzie reală — înlocuiește cu textul unei recenzii de pe Google.', autor: 'TODO prenume client' },
+  { text: 'TODO recenzie reală — înlocuiește cu textul unei recenzii de pe Google.', autor: 'TODO prenume client' },
+  { text: 'TODO recenzie reală — înlocuiește cu textul unei recenzii de pe Google.', autor: 'TODO prenume client' },
+];
+---
+
+<section id="recenzii">
+  <div class="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
+    <div data-reveal>
+      <Eyebrow num="07" text="Recenzii" />
+      <h2 class="mt-4 max-w-2xl text-h2">Ce spun clienții.</h2>
+    </div>
+
+    <div class="mt-10 grid gap-4 md:grid-cols-3 md:gap-6">
+      {
+        recenzii.map((r) => (
+          <figure class="card-industrial colturi flex flex-col bg-abur p-6" data-reveal>
+            <div class="flex gap-1" role="img" aria-label="5 stele din 5">
+              {Array.from({ length: 5 }).map(() => (
+                <Icon name="stea" class="h-4 w-4 fill-petrol" />
+              ))}
+            </div>
+            <blockquote class="mt-4 grow text-muted-light">{r.text}</blockquote>
+            <figcaption class="mt-4 text-caption font-medium">{r.autor}</figcaption>
+            <p class="text-caption text-muted-light">Recenzie Google</p>
+          </figure>
+        ))
+      }
+    </div>
+
+    {/* TODO: pune link-ul real al profilului Google Business în src/lib/firma.ts */}
+    <a
+      href={FIRMA.googleBusinessUrl}
+      target="_blank"
+      rel="noopener"
+      class="badge-google rounded-ui mt-8 inline-flex items-center gap-2 border border-gri-fonta px-5 py-2.5 text-caption font-medium"
+      data-reveal
+    >
+      <Icon name="stea" class="h-4 w-4 fill-petrol" />
+      {FIRMA.rating.valoare} · {FIRMA.rating.numarRecenzii} recenzii pe Google
+    </a>
+  </div>
+</section>
+
+<style>
+  .badge-google {
+    color: var(--color-petrol);
+    transition:
+      border-color var(--dur-quick) var(--ease-flux),
+      background-color var(--dur-quick) var(--ease-flux);
+  }
+  .badge-google:hover {
+    border-color: var(--color-petrol);
+    background-color: var(--color-portelan);
+  }
+  .badge-google:active {
+    background-color: var(--color-abur);
+  }
+</style>

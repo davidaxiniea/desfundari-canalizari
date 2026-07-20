@@ -1,0 +1,87 @@
+---
+/*
+  Header fix: transparent peste hero (petrol), devine porțelan la scroll.
+  Wordmark-ul se schimbă odată cu fundalul (light ↔ dark).
+*/
+import wordmarkLight from '../assets/wordmark-light-text.svg';
+import wordmarkDark from '../assets/wordmark-dark-text.svg';
+import Icon from './Icon.astro';
+import { FIRMA } from '../lib/firma';
+
+const linkuri = [
+  { href: '#servicii', text: 'Servicii' },
+  { href: '#proces', text: 'Cum lucrăm' },
+  { href: '#galerie', text: 'Galerie' },
+  { href: '#contact', text: 'Contact' },
+];
+---
+
+<header id="header" class="fixed inset-x-0 top-0 z-40 transition-colors duration-300">
+  <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 md:h-20 md:px-8">
+    <a href="#sus" class="shrink-0" aria-label="Desfundări Canalizări — începutul paginii">
+      <img class="logo-dark h-5 w-auto md:h-6" src={wordmarkLight.src} width="970" height="117" alt="desfundări canalizări" />
+      <img class="logo-light hidden h-5 w-auto md:h-6" src={wordmarkDark.src} width="970" height="117" alt="desfundări canalizări" />
+    </a>
+
+    <nav class="hidden items-center gap-7 md:flex" aria-label="Navigație principală">
+      {linkuri.map((l) => <a class="nav-link text-body font-medium" href={l.href}>{l.text}</a>)}
+    </nav>
+
+    <a
+      href={`tel:${FIRMA.telefonPrincipal.tel}`}
+      class="nav-link hidden items-center gap-2 font-mono text-body font-medium md:flex"
+    >
+      <Icon name="telefon" class="h-4 w-4" />
+      {FIRMA.telefonPrincipal.afisare}
+    </a>
+
+    {/* Pe mobil: doar iconul de telefon (zonă de atingere 44×44px);
+        bara sticky de jos e CTA-ul principal */}
+    <a
+      href={`tel:${FIRMA.telefonPrincipal.tel}`}
+      class="nav-link -mr-2 flex h-11 w-11 items-center justify-center md:hidden"
+      aria-label={`Sună la ${FIRMA.telefonPrincipal.afisare}`}
+    >
+      <Icon name="telefon" class="h-5 w-5" />
+    </a>
+  </div>
+</header>
+
+<style>
+  /* Peste hero: text porțelan pe petrol */
+  #header .nav-link {
+    color: var(--color-portelan);
+    transition:
+      color var(--dur-quick) var(--ease-flux),
+      opacity var(--dur-quick) var(--ease-flux);
+  }
+  #header .nav-link:hover {
+    opacity: 0.75;
+  }
+  #header .nav-link:active {
+    opacity: 0.6;
+  }
+
+  /* După scroll: fundal porțelan, text petrol, linie abur jos */
+  #header.scrolled {
+    background-color: color-mix(in srgb, var(--color-portelan) 94%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--color-abur);
+  }
+  #header.scrolled .nav-link {
+    color: var(--color-petrol);
+  }
+  #header.scrolled .logo-dark {
+    display: none;
+  }
+  #header.scrolled .logo-light {
+    display: block;
+  }
+</style>
+
+<script>
+  const header = document.getElementById('header')!;
+  const actualizeaza = () => header.classList.toggle('scrolled', window.scrollY > 24);
+  actualizeaza();
+  window.addEventListener('scroll', actualizeaza, { passive: true });
+</script>

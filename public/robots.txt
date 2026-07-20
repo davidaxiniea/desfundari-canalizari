@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# TODO: la mutarea pe domeniul propriu, actualizează URL-ul (trebuie să coincidă cu `site` + `base` din astro.config.mjs)
+Sitemap: https://davidaxiniea.github.io/desfundari-canalizari/sitemap-index.xml
