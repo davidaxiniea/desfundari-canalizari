@@ -9,7 +9,7 @@ import '@fontsource/inter/latin-500.css';
 import '@fontsource/inter/latin-ext-500.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '../styles/global.css';
-import { FIRMA, ZONE_ILFOV } from '../lib/firma';
+import { FIRMA, ZONE_ILFOV, RAZA_KM } from '../lib/firma';
 
 interface Props {
   // Paginile secundare (ex. /multumim) nu se indexează
@@ -37,10 +37,24 @@ const schema = {
   image: ogImage,
   telephone: FIRMA.telefonPrincipal.tel,
   priceRange: '$$',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Strada Tămâioarei 49',
+    addressLocality: 'București',
+    postalCode: '077190',
+    addressCountry: 'RO',
+  },
+  geo: { '@type': 'GeoCoordinates', latitude: 44.4675893, longitude: 26.1324112 },
   areaServed: [
     { '@type': 'City', name: 'București' },
     { '@type': 'AdministrativeArea', name: 'Ilfov' },
     ...ZONE_ILFOV.map((name) => ({ '@type': 'City', name })),
+    // Raza reală de deplasare: ~20 km în jurul Bucureștiului
+    {
+      '@type': 'GeoCircle',
+      geoMidpoint: { '@type': 'GeoCoordinates', latitude: 44.4268, longitude: 26.1025 },
+      geoRadius: String(RAZA_KM * 1000),
+    },
   ],
   openingHoursSpecification: {
     '@type': 'OpeningHoursSpecification',

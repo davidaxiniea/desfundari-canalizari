@@ -7,13 +7,19 @@ export const FIRMA = {
   // Afișare vs. link tel: — păstrează ambele sincronizate
   telefonPrincipal: { afisare: '0760 509 072', tel: '+40760509072' },
   telefonSecundar: { afisare: '0721 933 745', tel: '+40721933745' },
+  // Verificate pe profilul Google Business (iulie 2026)
   rating: { valoare: '5.0', numarRecenzii: 18 },
-  // TODO: pune link-ul real către profilul Google Business
-  googleBusinessUrl: 'https://TODO-link-profil-google-business',
-  email: '', // TODO: adresa de email a firmei (primește mesajele din formular via Netlify)
+  googleBusinessUrl: 'https://maps.app.goo.gl/d9JxamrdGJ5Do4J1A',
+  adresa: 'Strada Tămâioarei 49, sector 2, București',
+  email: '', // TODO: adresa de email a firmei
   cui: '', // TODO: CUI firmă (apare în footer)
-  adresa: '', // TODO: adresa sediului (apare în footer)
 } as const;
+
+/*
+  Acoperire: București (toate sectoarele) + Ilfov + o rază de ~20 km în jurul Bucureștiului.
+  Raza e declarată și în schema.org (GeoCircle, vezi src/layouts/Base.astro).
+*/
+export const RAZA_KM = 20;
 
 export const ZONE_BUCURESTI = [
   'Sector 1',
@@ -39,4 +45,16 @@ export const ZONE_ILFOV = [
   'Tunari',
   'Dobroești',
   'Jilava',
+  'Afumați',
+  'Berceni',
+  'Balotești',
+  'Cernica',
+  'Clinceni',
+  'Corbeanca',
+  'Glina',
+  'Ștefăneștii de Jos',
+  'Brănești',
+  'Vidra',
+  'Cornetu',
+  '1 Decembrie',
 ] as const;

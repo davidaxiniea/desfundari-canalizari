@@ -253,6 +253,49 @@ h1, h2, h3 {
   border-right: 1.5px solid;
 }
 
+/*
+  Duotone petrol — tratamentul comun al tuturor pozelor (galerie + servicii).
+  Rețetă CSS pură (fără filtru SVG, ca să meargă identic în Safari/iOS):
+  imaginea e desaturată, iar peste ea stă un strat petrol cu `mix-blend-mode: color`,
+  care împrumută nuanța brandului păstrând luminozitatea fotografiei.
+  Poze din surse diferite ajung astfel într-o singură paletă.
+
+  La hover (sau la `.dezvaluie`) tenta se stinge și poza revine la culoarea reală —
+  ambele proprietăți sunt animabile, spre deosebire de `mix-blend-mode`.
+*/
+.duotone {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--color-petrol);
+}
+.duotone > img {
+  filter: grayscale(1) contrast(1.05);
+  transition: filter var(--dur-reveal) var(--ease-flux);
+}
+.duotone::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--color-petrol);
+  mix-blend-mode: color;
+  opacity: 0.88;
+  pointer-events: none;
+  transition: opacity var(--dur-reveal) var(--ease-flux);
+}
+
+/* Revenirea la culoare reală — doar pe device-uri cu hover */
+@media (hover: hover) {
+  .duotone-hover:hover .duotone > img,
+  .duotone.duotone-hover:hover > img {
+    filter: grayscale(0) contrast(1);
+  }
+  .duotone-hover:hover .duotone::after,
+  .duotone.duotone-hover:hover::after {
+    opacity: 0;
+  }
+}
+
 /* Muchie prelucrată pe cardurile deschise */
 @utility card-industrial {
   border-radius: var(--radius-ui);

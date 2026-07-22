@@ -1,9 +1,9 @@
 ---
 /*
-  Zone acoperite — tag-uri cu sectoarele și localitățile Ilfov (SEO local).
-  Lista se editează în src/lib/firma.ts.
+  Zone acoperite — tag-uri cu sectoarele și localitățile Ilfov (SEO local),
+  plus raza de ~20 km în jurul Bucureștiului. Listele se editează în src/lib/firma.ts.
 */
-import { ZONE_BUCURESTI, ZONE_ILFOV } from '../lib/firma';
+import { ZONE_BUCURESTI, ZONE_ILFOV, RAZA_KM } from '../lib/firma';
 import Icon from './Icon.astro';
 import Eyebrow from './Eyebrow.astro';
 ---
@@ -11,14 +11,16 @@ import Eyebrow from './Eyebrow.astro';
 <section id="zone" class="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
   <div data-reveal>
     <Eyebrow num="05" text="Acoperire" />
-    <h2 class="mt-4 max-w-2xl text-h2">București și Ilfov, complet.</h2>
+    <h2 class="mt-4 max-w-2xl text-h2">București, Ilfov și {RAZA_KM} km în jur.</h2>
     <p class="mt-4 max-w-2xl text-muted-light">
-      Venim la tine oriunde în București și Ilfov: desfundare canalizare, curățare țevi,
-      vidanjare. Același preț, indiferent de zonă.
+      Venim la tine în toate sectoarele Bucureștiului, în tot județul Ilfov și în localitățile
+      aflate la până în {RAZA_KM} km de oraș: desfundare canalizare, curățare țevi, vidanjare.
+      Același preț, indiferent de zonă.
     </p>
   </div>
 
-  <div class="mt-10 grid gap-8 md:grid-cols-2" data-reveal>
+  {/* Ilfovul are mult mai multe localități — îi dăm două treimi din lățime */}
+  <div class="mt-10 grid gap-8 md:grid-cols-3" data-reveal>
     <div>
       <p class="flex items-center gap-2 text-caption font-medium">
         <Icon name="pin" class="h-4 w-4" /> București
@@ -27,9 +29,9 @@ import Eyebrow from './Eyebrow.astro';
         {ZONE_BUCURESTI.map((z) => <li class="tag">{z}</li>)}
       </ul>
     </div>
-    <div>
+    <div class="md:col-span-2">
       <p class="flex items-center gap-2 text-caption font-medium">
-        <Icon name="pin" class="h-4 w-4" /> Ilfov
+        <Icon name="pin" class="h-4 w-4" /> Ilfov și împrejurimi
       </p>
       <ul class="mt-4 flex flex-wrap gap-2">
         {ZONE_ILFOV.map((z) => <li class="tag">{z}</li>)}
@@ -38,7 +40,7 @@ import Eyebrow from './Eyebrow.astro';
   </div>
 
   <p class="mt-8 text-caption text-muted-light" data-reveal>
-    Nu-ți găsești localitatea? Sună. Dacă e în Ilfov, ajungem.
+    Nu-ți găsești localitatea? Sună. Dacă e la până în {RAZA_KM} km de București, ajungem.
   </p>
 </section>
 

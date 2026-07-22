@@ -1,109 +1,75 @@
 ---
 /*
-  Galerie de lucrări: 3 slidere interactive înainte/după (tragi de mâner și
-  vezi diferența) + 3 poze cu lightbox nativ (<dialog>, zero librării).
+  Galerie — POZE REALE ale firmei, preluate de pe profilul ei de Google Business
+  („De la proprietar", deci ale firmei de drept). Fără stock aici: secțiunea
+  afirmă că sunt lucrările noastre, deci trebuie să fie adevărat.
 
-  INSTRUCȚIUNI ÎNLOCUIRE POZE (pentru client / la predare):
-  1. Pune pozele reale în `src/assets/galerie/` — JPG, orientare peisaj,
-     ideal 1200×900 (4:3), sub 500KB fiecare. Build-ul le optimizează automat
-     (WebP, lazy, dimensiuni responsive).
-  2. Pentru slidere: actualizează lista `perechi` (poza înainte + poza după,
-     făcute din același unghi — altfel comparația nu are efect).
-  3. Pentru pozele simple: lista `simple`, cu alt descriptiv + local (SEO).
+  Nu există perechi înainte/după, așa că nu folosim sliderul de comparație
+  (componenta `BeforeAfter.astro` rămâne în repo pentru când clientul trimite perechi reale).
+
+  Tratament: duotone petrol în grilă (armonie cu restul paginii), culoare reală
+  la hover și în lightbox — poza autentică rămâne verificabilă.
+
+  ÎNLOCUIRE / ADĂUGARE POZE:
+  1. Pune JPG-uri peisaj în `src/assets/galerie/` (ideal 1200×900, sub 500KB).
+  2. Adaugă-le în lista `poze` de mai jos, cu `alt` descriptiv + localitate (contează la SEO).
 */
-import { Image } from 'astro:assets';
-import { getImage } from 'astro:assets';
-import BeforeAfter from './BeforeAfter.astro';
+import { Image, getImage } from 'astro:assets';
 import Eyebrow from './Eyebrow.astro';
-
-import coloanaInainte from '../assets/galerie/TODO-desfundare-coloana-inainte.jpg';
-import coloanaDupa from '../assets/galerie/TODO-desfundare-coloana-dupa.jpg';
-import hidrojetInainte from '../assets/galerie/TODO-hidrojet-exterior-inainte.jpg';
-import hidrojetDupa from '../assets/galerie/TODO-hidrojet-exterior-dupa.jpg';
-import inspectieInainte from '../assets/galerie/TODO-inspectie-video-inainte.jpg';
-import inspectieDupa from '../assets/galerie/TODO-inspectie-video-dupa.jpg';
-import echipa from '../assets/galerie/TODO-echipa-la-lucru.jpg';
-import echipament from '../assets/galerie/TODO-echipament-hidrojet.jpg';
-import duba from '../assets/galerie/TODO-duba-echipata.jpg';
 import Icon from './Icon.astro';
 
-// TODO: înlocuiește pozele placeholder cu lucrări reale (vezi instrucțiunile de sus)
-const perechi = [
-  {
-    inainte: coloanaInainte,
-    dupa: coloanaDupa,
-    altInainte: 'Coloană de bloc înfundată, înainte de intervenție, București',
-    altDupa: 'Coloană de bloc desfundată și funcțională, București',
-    eticheta: 'Desfundare coloană de bloc',
-  },
-  {
-    inainte: hidrojetInainte,
-    dupa: hidrojetDupa,
-    altInainte: 'Canalizare exterioară cu depuneri, înainte de curățarea cu hidrojet, Ilfov',
-    altDupa: 'Canalizare exterioară curățată cu hidrojet, Ilfov',
-    eticheta: 'Curățare cu hidrojet',
-  },
-  {
-    inainte: inspectieInainte,
-    dupa: inspectieDupa,
-    altInainte: 'Blocaj identificat la inspecția video a canalizării, București',
-    altDupa: 'Traseu de canalizare liber, confirmat la inspecția video, București',
-    eticheta: 'Inspecție video',
-  },
+import echipaLaCamin from '../assets/galerie/lucrare-echipa-la-camin.jpg';
+import hidrojet from '../assets/galerie/lucrare-hidrojet-presiune.jpg';
+import echipament from '../assets/galerie/lucrare-echipament-hidrojet-duba.jpg';
+import furtunInCamin from '../assets/galerie/lucrare-furtun-in-camin.jpg';
+import doiTehnicieni from '../assets/galerie/lucrare-doi-tehnicieni.jpg';
+import dubaBrenduita from '../assets/galerie/lucrare-duba-brenduita.jpg';
+
+// Șase cadre distincte (echipă, hidrojet, echipament, cămin, dubă) — preferăm
+// varietatea în locul umpluturii: pozele clientului provin din aceleași intervenții.
+const poze = [
+  { src: echipaLaCamin, alt: 'Echipă de desfundare canalizare la un cămin de vizitare, București' },
+  { src: hidrojet, alt: 'Curățare canalizare cu jet de apă sub presiune (hidrojet), București' },
+  { src: echipament, alt: 'Echipament hidrojet cu tambur de furtun, montat în duba de intervenție' },
+  { src: furtunInCamin, alt: 'Furtun de desfundare introdus în căminul de canalizare' },
+  { src: doiTehnicieni, alt: 'Doi tehnicieni desfundă canalizarea la un cămin de vizitare' },
+  { src: dubaBrenduita, alt: 'Duba de intervenție pentru desfundări și inspecție video canalizare' },
 ];
 
-const simple = [
-  { src: echipa, alt: 'Echipă de desfundare canalizare la lucru, sector 3 București' },
-  { src: echipament, alt: 'Echipament hidrojet profesional pentru curățare țevi' },
-  { src: duba, alt: 'Dubă de intervenție Desfundări Canalizări, București și Ilfov' },
-];
-
-// Variante mari pentru lightbox, optimizate la build
-const mari = await Promise.all(
-  simple.map((i) => getImage({ src: i.src, width: 1600, format: 'webp' })),
-);
+// Variante mari pentru lightbox (culoare reală), optimizate la build
+const mari = await Promise.all(poze.map((p) => getImage({ src: p.src, width: 1600, format: 'webp' })));
 ---
 
 <section id="galerie" class="bg-petrol text-portelan">
   <div class="mx-auto max-w-6xl px-5 py-16 md:px-8 md:py-24">
     <div data-reveal>
       <Eyebrow num="02" text="Lucrări" tone="dark" />
-      <h2 class="mt-4 max-w-2xl text-h2">Înainte și după. Trage și compară.</h2>
+      <h2 class="mt-4 max-w-2xl text-h2">Din lucrările noastre.</h2>
       <p class="mt-4 max-w-2xl text-muted-dark">
-        Poze din lucrările noastre, nu din stock. Trage de mânerul din mijloc ca să vezi diferența.
+        Poze reale din intervenții în București și Ilfov. Apasă pe o poză ca s-o vezi mare, la culoare.
       </p>
     </div>
 
-    {/* Sliderele înainte/după — vând cel mai bine la desfundări */}
-    <div class="mt-10 grid gap-4 md:grid-cols-3">
+    <div class="mt-10 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
       {
-        perechi.map((p) => (
-          <figure data-reveal>
-            <BeforeAfter inainte={p.inainte} dupa={p.dupa} altInainte={p.altInainte} altDupa={p.altDupa} />
-            <figcaption class="mt-2 text-caption text-muted-dark">{p.eticheta}</figcaption>
-          </figure>
-        ))
-      }
-    </div>
-
-    {/* Pozele simple, cu lightbox */}
-    <div class="mt-6 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
-      {
-        simple.map((img, i) => (
+        poze.map((p, i) => (
           <button
             type="button"
-            class="poza colturi group rounded-ui relative overflow-hidden"
+            class="poza colturi duotone-hover rounded-ui relative overflow-hidden"
             data-index={i}
-            aria-label={`Mărește imaginea: ${img.alt}`}
+            aria-label={`Mărește imaginea: ${p.alt}`}
+            data-reveal
           >
-            <Image
-              src={img.src}
-              alt={img.alt}
-              widths={[400, 800, 1200]}
-              sizes="(min-width: 768px) 33vw, 50vw"
-              class="aspect-[4/3] h-auto w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-              loading="lazy"
-            />
+            <span class="duotone block">
+              <Image
+                src={p.src}
+                alt={p.alt}
+                widths={[400, 800, 1200]}
+                sizes="(min-width: 768px) 33vw, 50vw"
+                class="aspect-[4/3] h-auto w-full object-cover"
+                loading="lazy"
+              />
+            </span>
           </button>
         ))
       }
@@ -111,12 +77,12 @@ const mari = await Promise.all(
   </div>
 </section>
 
-{/* Lightbox: dialog nativ — Esc închide implicit, focus rămâne captiv în dialog */}
+{/* Lightbox: dialog nativ — Esc închide implicit, focus captiv. Poza se vede la culoare reală. */}
 <dialog id="lightbox" class="rounded-ui m-auto w-[min(96vw,72rem)] bg-petrol p-3 backdrop:bg-petrol/80 md:p-4">
   <img id="lightbox-img" class="max-h-[80vh] w-full rounded-[3px] object-contain" src="" alt="" />
   <div class="mt-3 flex items-center justify-between gap-4">
     <p id="lightbox-caption" class="text-caption text-muted-dark"></p>
-    <div class="flex gap-2">
+    <div class="flex shrink-0 gap-2">
       <button type="button" class="lb-btn" data-lb="prev" aria-label="Imaginea anterioară">
         <Icon name="stanga" class="h-5 w-5" />
       </button>
@@ -130,7 +96,7 @@ const mari = await Promise.all(
   </div>
 </dialog>
 
-<script define:vars={{ mari: mari.map((m) => m.src), alturi: simple.map((i) => i.alt) }}>
+<script define:vars={{ mari: mari.map((m) => m.src), alturi: poze.map((p) => p.alt) }}>
   const dialog = document.getElementById('lightbox');
   const img = document.getElementById('lightbox-img');
   const caption = document.getElementById('lightbox-caption');
@@ -188,11 +154,23 @@ const mari = await Promise.all(
     opacity: 0.7;
   }
 
-  /* Colțarele tehnice trebuie să rămână peste imagine */
+  /* Colțarele tehnice stau peste poză */
   .poza.colturi::before,
   .poza.colturi::after {
     z-index: 1;
     border-color: color-mix(in srgb, var(--color-portelan) 85%, transparent);
+  }
+
+  /* Zoom discret la hover, peste dezvăluirea culorii */
+  .poza :global(img) {
+    transition:
+      filter var(--dur-reveal) var(--ease-flux),
+      transform var(--dur-reveal) var(--ease-flux);
+  }
+  @media (hover: hover) {
+    .poza:hover :global(img) {
+      transform: scale(1.03);
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
