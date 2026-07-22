@@ -7,8 +7,9 @@
   Nu există perechi înainte/după, așa că nu folosim sliderul de comparație
   (componenta `BeforeAfter.astro` rămâne în repo pentru când clientul trimite perechi reale).
 
-  Tratament: duotone petrol în grilă (armonie cu restul paginii), culoare reală
-  la hover și în lightbox — poza autentică rămâne verificabilă.
+  Tratament: grad discret de culoare în grilă (vezi `.duotone` din global.css),
+  care leagă cadrele între ele fără să le stingă culorile; la hover și în lightbox
+  poza e complet neatinsă.
 
   ÎNLOCUIRE / ADĂUGARE POZE:
   1. Pune JPG-uri peisaj în `src/assets/galerie/` (ideal 1200×900, sub 500KB).
@@ -46,7 +47,7 @@ const mari = await Promise.all(poze.map((p) => getImage({ src: p.src, width: 160
       <Eyebrow num="02" text="Lucrări" tone="dark" />
       <h2 class="mt-4 max-w-2xl text-h2">Din lucrările noastre.</h2>
       <p class="mt-4 max-w-2xl text-muted-dark">
-        Poze reale din intervenții în București și Ilfov. Apasă pe o poză ca s-o vezi mare, la culoare.
+        Poze reale din intervenții în București și Ilfov. Apasă pe o poză ca s-o vezi mare.
       </p>
     </div>
 

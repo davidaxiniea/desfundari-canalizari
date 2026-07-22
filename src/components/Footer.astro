@@ -34,14 +34,14 @@ const linkuri = [
 
       <div>
         <p class="eyebrow text-muted-dark">Telefon</p>
-        <ul class="mt-4 space-y-2">
+        <ul class="mt-2">
           <li>
-            <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="f-link font-mono font-medium">
+            <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="f-link inline-block py-1.5 font-mono font-medium">
               {FIRMA.telefonPrincipal.afisare}
             </a>
           </li>
           <li>
-            <a href={`tel:${FIRMA.telefonSecundar.tel}`} class="f-link font-mono font-medium">
+            <a href={`tel:${FIRMA.telefonSecundar.tel}`} class="f-link inline-block py-1.5 font-mono font-medium">
               {FIRMA.telefonSecundar.afisare}
             </a>
           </li>
@@ -51,11 +51,12 @@ const linkuri = [
 
       <nav aria-label="Linkuri în pagină">
         <p class="eyebrow text-muted-dark">Pe pagină</p>
-        <ul class="mt-4 space-y-2">
+        {/* py-1.5 duce zona de atingere peste pragul WCAG de 24px */}
+        <ul class="mt-2">
           {
             linkuri.map((l) => (
               <li>
-                <a href={l.href} class="f-link text-caption">
+                <a href={l.href} class="f-link inline-block py-1.5 text-caption">
                   {l.text}
                 </a>
               </li>

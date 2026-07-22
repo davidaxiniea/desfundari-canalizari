@@ -49,7 +49,7 @@ const pasi = [
           <span
             class:list={[
               'pas-marker absolute top-0 flex h-10 w-10 items-center justify-center rounded-full font-medium',
-              p.final ? 'bg-semnal text-petrol' : 'bg-petrol text-portelan',
+              p.final ? 'bg-semnal-aa text-petrol' : 'bg-petrol text-portelan',
             ]}
             style={`left: calc(${12.5 + i * 25}% - 1.25rem); transition-delay: ${i * 180}ms`}
           >
@@ -67,22 +67,19 @@ const pasi = [
             <span
               class:list={[
                 'pas-marker absolute top-0 left-0 flex h-10 w-10 items-center justify-center rounded-full font-medium md:hidden',
-                p.final ? 'bg-semnal text-petrol' : 'bg-petrol text-portelan',
+                p.final ? 'bg-semnal-aa text-petrol' : 'bg-petrol text-portelan',
               ]}
               style={`transition-delay: ${i * 180}ms`}
               aria-hidden="true"
             >
               {i + 1}
             </span>
-            <h3 class="text-h3">
-              {p.final ? (
-                <>
-                  C<span class="text-semnal">u</span>rge.
-                </>
-              ) : (
-                p.titlu
-              )}
-            </h3>
+            {/*
+              Aici titlul rămâne integral petrol: portocaliul pe fundal deschis
+              are doar ~2.2:1, sub orice prag de contrast. Gestul de brand e
+              purtat de bulina portocalie a pasului, nu de literă.
+            */}
+            <h3 class="text-h3">{p.titlu}</h3>
             <p class="mt-2 text-caption text-muted-light md:mx-auto md:max-w-52">{p.text}</p>
           </li>
         ))

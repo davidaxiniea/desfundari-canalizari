@@ -18,13 +18,14 @@ const linkuri = [
 
 <header id="header" class="fixed inset-x-0 top-0 z-40 transition-colors duration-300">
   <div class="mx-auto flex h-16 max-w-6xl items-center justify-between gap-6 px-5 md:h-20 md:px-8">
-    <a href="#sus" class="shrink-0" aria-label="Desfundări Canalizări — începutul paginii">
+    <a href="#sus" class="shrink-0 py-2" aria-label="Desfundări Canalizări — începutul paginii">
       <img class="logo-dark h-5 w-auto md:h-6" src={wordmarkLight.src} width="970" height="117" alt="desfundări canalizări" />
       <img class="logo-light hidden h-5 w-auto md:h-6" src={wordmarkDark.src} width="970" height="117" alt="desfundări canalizări" />
     </a>
 
     <nav class="hidden items-center gap-7 md:flex" aria-label="Navigație principală">
-      {linkuri.map((l) => <a class="nav-link text-body font-medium" href={l.href}>{l.text}</a>)}
+      {/* py-2 duce zona de atingere peste pragul WCAG de 24px */}
+      {linkuri.map((l) => <a class="nav-link py-2 text-body font-medium" href={l.href}>{l.text}</a>)}
     </nav>
 
     <a

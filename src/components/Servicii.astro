@@ -7,7 +7,9 @@
   ilustrații stock gratuite (Pexels) pentru serviciile fără poză proprie —
   marcate mai jos cu `stock: true`. Nu sunt prezentate ca lucrări ale firmei;
   afirmația „lucrările noastre" apare doar în galerie, unde totul e real.
-  Toate primesc același duotone petrol, deci se citesc ca un singur sistem.
+  Toate trec prin gradul comun de culoare (`.duotone`), iar cele stock primesc
+  în plus clasa `.e-stock` — puțin mai desaturate, ca să intre în paleta
+  cadrelor reale, care sunt făcute pe stradă, în lumină rece.
 */
 import { Image } from 'astro:assets';
 import Icon from './Icon.astro';
@@ -29,6 +31,7 @@ const servicii = [
     verdict: 'Curge.',
     foto: fotoDesfundari,
     alt: 'Intervenție de desfundare canalizare la un cămin, București',
+    stock: false,
   },
   {
     icon: 'camera',
@@ -37,6 +40,7 @@ const servicii = [
     verdict: 'Clar.',
     foto: fotoInspectie,
     alt: 'Interiorul unui cămin de canalizare, verificat înainte de intervenție',
+    stock: false,
   },
   {
     icon: 'cheie',
@@ -54,6 +58,7 @@ const servicii = [
     verdict: 'Liber.',
     foto: fotoCuratare,
     alt: 'Curățare cu jet de apă sub presiune, hidrojet profesional',
+    stock: false,
   },
   {
     icon: 'camion',
@@ -71,6 +76,7 @@ const servicii = [
     verdict: 'Venim.',
     foto: fotoNonStop,
     alt: 'Duba de intervenție desfundări canalizare, gata de plecare',
+    stock: false,
   },
 ] as const;
 ---
@@ -92,7 +98,7 @@ const servicii = [
           class="card-industrial colturi card-tilt duotone-hover flex flex-col overflow-hidden bg-abur"
           data-reveal
         >
-          <span class="duotone block">
+          <span class:list={['duotone block', s.stock && 'e-stock']}>
             <Image
               src={s.foto}
               alt={s.alt}
@@ -109,11 +115,12 @@ const servicii = [
             <p class="mt-2 grow text-muted-light">{s.text}</p>
             <p class="mt-3 font-medium">{s.verdict}</p>
 
-            <div class="mt-5 flex items-center gap-5 border-t border-portelan pt-4 text-caption">
-              <a class="link-discret font-medium" href="#contact">
+            {/* py-1.5 duce zona de atingere peste pragul WCAG de 24px */}
+            <div class="mt-5 flex items-center gap-5 border-t border-portelan pt-2.5 text-caption">
+              <a class="link-discret py-1.5 font-medium" href="#contact">
                 Cere ofertă
               </a>
-              <a class="link-discret font-mono font-medium" href={`tel:${FIRMA.telefonPrincipal.tel}`}>
+              <a class="link-discret py-1.5 font-mono font-medium" href={`tel:${FIRMA.telefonPrincipal.tel}`}>
                 {FIRMA.telefonPrincipal.afisare}
               </a>
             </div>

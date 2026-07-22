@@ -50,6 +50,16 @@
   --text-muted-on-dark: color-mix(in srgb, var(--color-gri-fonta) 52%, var(--color-portelan));
   --muchie-light: color-mix(in srgb, var(--color-gri-fonta) 30%, transparent);
   --muchie-dark: color-mix(in srgb, var(--color-portelan) 22%, transparent);
+
+  /*
+    Portocaliul semnal pur, cu text petrol deasupra, dă 4.25:1 — sub pragul AA
+    de 4.5 pentru text normal. Îl deschidem cu 8% porțelan (4.59:1) oriunde e
+    SUPRAFAȚĂ sub text: butoane, bulina pasului final. Rămâne același portocaliu
+    la privire, doar trece testul.
+    Regula complementară: portocaliul NU se folosește ca text pe fundal deschis
+    (2.2–2.6:1) — acolo gestul de brand se face prin suprafață, nu prin literă.
+  */
+  --semnal-aa: color-mix(in srgb, var(--color-semnal) 92%, var(--color-portelan));
 }
 
 html {
@@ -124,11 +134,12 @@ h1, h2, h3 {
   font-weight: 500;
   border-radius: var(--radius-ui);
   padding: 0.875rem 1.5rem;
+  /* Toate treptele stau la ≥4.5:1 cu textul petrol (vezi --semnal-aa) */
   background-image: linear-gradient(
     180deg,
-    color-mix(in srgb, var(--color-semnal) 78%, var(--color-portelan)) 0%,
-    var(--color-semnal) 45%,
-    color-mix(in srgb, var(--color-semnal) 84%, var(--color-petrol)) 100%
+    color-mix(in srgb, var(--color-semnal) 70%, var(--color-portelan)) 0%,
+    color-mix(in srgb, var(--color-semnal) 88%, var(--color-portelan)) 55%,
+    var(--semnal-aa) 100%
   );
   border: 1px solid color-mix(in srgb, var(--color-semnal) 62%, var(--color-petrol));
   box-shadow:
@@ -150,7 +161,8 @@ h1, h2, h3 {
   }
   &:active {
     transform: translateY(1px);
-    filter: brightness(0.96);
+    /* apăsarea se simte prin deplasare + umbră interioară, nu prin întunecare
+       (ar coborî contrastul textului sub AA) */
     box-shadow:
       inset 0 2px 4px color-mix(in srgb, var(--color-petrol) 30%, transparent),
       0 1px 3px -1px color-mix(in srgb, var(--color-petrol) 25%, transparent);
@@ -254,14 +266,14 @@ h1, h2, h3 {
 }
 
 /*
-  Duotone petrol — tratamentul comun al tuturor pozelor (galerie + servicii).
-  Rețetă CSS pură (fără filtru SVG, ca să meargă identic în Safari/iOS):
-  imaginea e desaturată, iar peste ea stă un strat petrol cu `mix-blend-mode: color`,
-  care împrumută nuanța brandului păstrând luminozitatea fotografiei.
-  Poze din surse diferite ajung astfel într-o singură paletă.
+  Gradul de culoare comun al pozelor (galerie + servicii).
+  Pozele își păstrează culorile reale — vestele portocalii, cerul, duba se văd —
+  peste ele trece doar o notă rece de petrol în umbre (`soft-light`, discret),
+  care leagă între ele cadre făcute în lumini diferite și din surse diferite.
 
-  La hover (sau la `.dezvaluie`) tenta se stinge și poza revine la culoarea reală —
-  ambele proprietăți sunt animabile, spre deosebire de `mix-blend-mode`.
+  Rețetă CSS pură, fără filtru SVG, ca să se comporte identic în Safari/iOS.
+  La hover gradul se stinge complet: ambele proprietăți sunt animabile,
+  spre deosebire de `mix-blend-mode`.
 */
 .duotone {
   position: relative;
@@ -270,7 +282,7 @@ h1, h2, h3 {
   background-color: var(--color-petrol);
 }
 .duotone > img {
-  filter: grayscale(1) contrast(1.05);
+  filter: saturate(0.94) contrast(1.04);
   transition: filter var(--dur-reveal) var(--ease-flux);
 }
 .duotone::after {
@@ -278,22 +290,46 @@ h1, h2, h3 {
   position: absolute;
   inset: 0;
   background-color: var(--color-petrol);
-  mix-blend-mode: color;
-  opacity: 0.88;
+  mix-blend-mode: soft-light;
+  opacity: 0.45;
   pointer-events: none;
   transition: opacity var(--dur-reveal) var(--ease-flux);
 }
 
-/* Revenirea la culoare reală — doar pe device-uri cu hover */
+/*
+  Pozele stock vin din alte lumini și sunt mai saturate decât cadrele reale ale
+  firmei (străzi reci, cer acoperit). Primesc un grad ceva mai ferm ca să intre
+  în aceeași paletă — și nu se dezvăluie complet la hover, fiindcă nu sunt
+  dovezi, ci ilustrații.
+*/
+.duotone.e-stock > img {
+  filter: saturate(0.7) contrast(1.05);
+}
+.duotone.e-stock::after {
+  opacity: 0.6;
+}
+
+/* Revenirea la culoarea neatinsă — doar pe device-uri cu hover */
 @media (hover: hover) {
   .duotone-hover:hover .duotone > img,
   .duotone.duotone-hover:hover > img {
-    filter: grayscale(0) contrast(1);
+    filter: saturate(1) contrast(1);
   }
   .duotone-hover:hover .duotone::after,
   .duotone.duotone-hover:hover::after {
     opacity: 0;
   }
+  .duotone-hover:hover .duotone.e-stock > img {
+    filter: saturate(0.85) contrast(1.02);
+  }
+  .duotone-hover:hover .duotone.e-stock::after {
+    opacity: 0.35;
+  }
+}
+
+/* Suprafață portocalie sub text petrol, la contrast AA */
+@utility bg-semnal-aa {
+  background-color: var(--semnal-aa);
 }
 
 /* Muchie prelucrată pe cardurile deschise */
