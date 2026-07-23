@@ -6,7 +6,7 @@
 import wordmarkLight from '../assets/wordmark-light-text.svg';
 import wordmarkDark from '../assets/wordmark-dark-text.svg';
 import Icon from './Icon.astro';
-import { FIRMA } from '../lib/firma';
+import { FIRMA, waUrl } from '../lib/firma';
 
 const linkuri = [
   { href: '#servicii', text: 'Servicii' },
@@ -28,20 +28,28 @@ const linkuri = [
       {linkuri.map((l) => <a class="nav-link py-2 text-body font-medium" href={l.href}>{l.text}</a>)}
     </nav>
 
-    <a
-      href={`tel:${FIRMA.telefonPrincipal.tel}`}
-      class="nav-link hidden items-center gap-2 font-mono text-body font-medium md:flex"
-    >
-      <Icon name="telefon" class="h-4 w-4" />
-      {FIRMA.telefonPrincipal.afisare}
-    </a>
+    <div class="hidden items-center gap-4 md:flex">
+      <a href={waUrl()} target="_blank" rel="noopener" class="wa-pill" data-track="whatsapp">
+        <Icon name="whatsapp" class="h-4 w-4" />
+        WhatsApp
+      </a>
+      <a
+        href={`tel:${FIRMA.telefonPrincipal.tel}`}
+        class="nav-link flex items-center gap-2 font-mono text-body font-medium"
+        data-track="telefon"
+      >
+        <Icon name="telefon" class="h-4 w-4" />
+        {FIRMA.telefonPrincipal.afisare}
+      </a>
+    </div>
 
-    {/* Pe mobil: doar iconul de telefon (zonă de atingere 44×44px);
-        bara sticky de jos e CTA-ul principal */}
+    {/* Pe mobil: iconul de telefon (zonă de atingere 44×44px); WhatsApp și „Sună"
+        stau în bara sticky de jos, CTA-ul principal */}
     <a
       href={`tel:${FIRMA.telefonPrincipal.tel}`}
       class="nav-link -mr-2 flex h-11 w-11 items-center justify-center md:hidden"
       aria-label={`Sună la ${FIRMA.telefonPrincipal.afisare}`}
+      data-track="telefon"
     >
       <Icon name="telefon" class="h-5 w-5" />
     </a>
@@ -61,6 +69,40 @@ const linkuri = [
   }
   #header .nav-link:active {
     opacity: 0.6;
+  }
+
+  /* WhatsApp compact în header — btn-semnal la scară mică, merge pe ambele fundaluri */
+  .wa-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-radius: var(--radius-ui);
+    padding: 0.5rem 0.9rem;
+    font-weight: 500;
+    color: var(--color-petrol);
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-semnal) 70%, var(--color-portelan)) 0%,
+      color-mix(in srgb, var(--color-semnal) 88%, var(--color-portelan)) 55%,
+      var(--semnal-aa) 100%
+    );
+    border: 1px solid color-mix(in srgb, var(--color-semnal) 62%, var(--color-petrol));
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-portelan) 45%, transparent);
+    transition:
+      transform var(--dur-quick) var(--ease-flux),
+      filter var(--dur-quick) var(--ease-flux);
+  }
+  .wa-pill:hover {
+    transform: translateY(-1px);
+    filter: brightness(1.04);
+  }
+  .wa-pill:active {
+    transform: translateY(1px);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .wa-pill:hover {
+      transform: none;
+    }
   }
 
   /* După scroll: fundal porțelan, text petrol, linie abur jos */

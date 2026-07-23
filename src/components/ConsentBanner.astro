@@ -1,0 +1,65 @@
+---
+/*
+  Banda de consimțământ pentru cookie-uri (Consent Mode v2).
+  Apare DOAR când măsurarea e activă (există un ID în ANALYTICS) și doar dacă
+  vizitatorul n-a ales încă. Pe mobil stă deasupra barei sticky de contact.
+*/
+import { analyticsActiv } from '../lib/firma';
+---
+
+{
+  analyticsActiv && (
+    <div
+      id="consent"
+      class="fixed inset-x-0 bottom-[5.5rem] z-[60] hidden px-3 md:bottom-0 md:px-0"
+      role="dialog"
+      aria-live="polite"
+      aria-label="Cookie-uri"
+    >
+      <div class="mx-auto flex max-w-6xl flex-col gap-3 border border-abur bg-portelan/97 p-4 backdrop-blur md:my-4 md:flex-row md:items-center md:justify-between md:px-6">
+        <p class="text-caption text-muted-light">
+          Folosim cookie-uri ca să vedem ce anunțuri aduc clienți. Le poți accepta sau refuza — telefonul și WhatsApp merg oricum.
+        </p>
+        <div class="flex shrink-0 gap-2">
+          <button type="button" id="consent-refuz" class="btn-outline-light text-caption">Refuz</button>
+          <button type="button" id="consent-accept" class="btn-semnal text-caption">Accept</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+<script>
+  const banda = document.getElementById('consent');
+  if (banda) {
+    const CHEIE = 'consimtamant-cookie';
+    // Arată banda doar dacă nu există o alegere salvată.
+    let ales: string | null = null;
+    try {
+      ales = localStorage.getItem(CHEIE);
+    } catch {
+      /* localStorage indisponibil — nu blocăm pagina */
+    }
+    if (!ales) banda.classList.remove('hidden');
+
+    const inchide = (valoare: 'accept' | 'refuz') => {
+      try {
+        localStorage.setItem(CHEIE, valoare);
+      } catch {
+        /* nu putem persista — banda oricum se închide pentru sesiunea curentă */
+      }
+      if (valoare === 'accept' && typeof window.gtag === 'function') {
+        window.gtag('consent', 'update', {
+          ad_storage: 'granted',
+          ad_user_data: 'granted',
+          ad_personalization: 'granted',
+          analytics_storage: 'granted',
+        });
+      }
+      banda.classList.add('hidden');
+    };
+
+    document.getElementById('consent-accept')?.addEventListener('click', () => inchide('accept'));
+    document.getElementById('consent-refuz')?.addEventListener('click', () => inchide('refuz'));
+  }
+</script>

@@ -6,7 +6,7 @@
 import Icon from './Icon.astro';
 import FlowLine from './FlowLine.astro';
 import Disponibil from './Disponibil.astro';
-import { FIRMA } from '../lib/firma';
+import { FIRMA, waUrl } from '../lib/firma';
 
 const trust = [
   { icon: 'ceas', text: 'Ajungem în aceeași zi' },
@@ -31,12 +31,25 @@ const trust = [
     </p>
 
     <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-      <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="btn-semnal text-h3">
+      <a
+        href={waUrl()}
+        target="_blank"
+        rel="noopener"
+        class="btn-semnal text-h3"
+        data-track="whatsapp"
+      >
+        <Icon name="whatsapp" class="h-5 w-5" />
+        Scrie pe WhatsApp
+      </a>
+      <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="btn-outline-dark text-h3" data-track="telefon">
         <Icon name="telefon" class="h-5 w-5" />
         Sună <span class="font-mono">{FIRMA.telefonPrincipal.afisare}</span>
       </a>
-      <a href="#servicii" class="btn-outline-dark text-h3">Vezi serviciile</a>
     </div>
+
+    <a href="#servicii" class="mt-5 inline-block text-caption text-muted-dark underline underline-offset-4 transition-opacity hover:opacity-75">
+      Vezi serviciile
+    </a>
 
     <ul class="mt-10 flex flex-wrap gap-x-7 gap-y-3">
       {

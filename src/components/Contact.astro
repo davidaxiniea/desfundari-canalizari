@@ -1,13 +1,13 @@
 ---
 /*
-  CTA final pe petrol: verdictul mare, ambele numere de telefon (mono),
-  formular scurt prin Netlify Forms (secundar — telefonul rămâne CTA-ul primar).
+  CTA final pe petrol: verdictul mare, WhatsApp ca acțiune principală (panoul din
+  dreapta, portocaliu) și ambele numere de telefon (mono) ca alternativă.
 */
 import Icon from './Icon.astro';
 import FlowLine from './FlowLine.astro';
 import Eyebrow from './Eyebrow.astro';
 import Disponibil from './Disponibil.astro';
-import { FIRMA } from '../lib/firma';
+import { FIRMA, waUrl } from '../lib/firma';
 ---
 
 <section id="contact" class="bg-petrol text-portelan">
@@ -23,7 +23,11 @@ import { FIRMA } from '../lib/firma';
     <div class="mt-12 grid gap-12 md:grid-cols-2 md:gap-16">
       <div data-reveal>
         <div class="flex flex-wrap items-baseline gap-3">
-          <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="tel-mare font-mono text-h2 md:text-[2.25rem]">
+          <a
+            href={`tel:${FIRMA.telefonPrincipal.tel}`}
+            class="tel-mare font-mono text-h2 md:text-[2.25rem]"
+            data-track="telefon"
+          >
             {FIRMA.telefonPrincipal.afisare}
           </a>
           <button type="button" class="copiaza hidden md:inline-flex" data-numar={FIRMA.telefonPrincipal.afisare}>
@@ -33,7 +37,11 @@ import { FIRMA } from '../lib/firma';
         <p class="mt-1 text-caption text-muted-dark">Numărul principal, non-stop</p>
 
         <div class="mt-6 flex flex-wrap items-baseline gap-3">
-          <a href={`tel:${FIRMA.telefonSecundar.tel}`} class="tel-mare font-mono text-h3">
+          <a
+            href={`tel:${FIRMA.telefonSecundar.tel}`}
+            class="tel-mare font-mono text-h3"
+            data-track="telefon"
+          >
             {FIRMA.telefonSecundar.afisare}
           </a>
           <button type="button" class="copiaza hidden md:inline-flex" data-numar={FIRMA.telefonSecundar.afisare}>
@@ -41,11 +49,6 @@ import { FIRMA } from '../lib/firma';
           </button>
         </div>
         <p class="mt-1 text-caption text-muted-dark">Al doilea număr, dacă primul e ocupat</p>
-
-        <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="btn-semnal mt-8 text-h3">
-          <Icon name="telefon" class="h-5 w-5" />
-          Sună acum
-        </a>
 
         <ul class="mt-10 space-y-3 text-caption text-muted-dark">
           <li class="flex items-center gap-2">
@@ -60,47 +63,25 @@ import { FIRMA } from '../lib/firma';
         </ul>
       </div>
 
-      {/*
-        Formular prin Netlify Forms: după primul deploy, activează notificările
-        pe email din Netlify → Forms → Notifications (emailul firmei).
-      */}
-      <form
-        name="cerere-oferta"
-        method="POST"
-        data-netlify="true"
-        netlify-honeypot="bot-field"
-        action={`${import.meta.env.BASE_URL.replace(/\/$/, '')}/multumim`}
-        class="content-start gap-4 md:grid"
-        data-reveal
-      >
-        <input type="hidden" name="form-name" value="cerere-oferta" />
-        <p class="hidden">
-          <label>Nu completa: <input name="bot-field" /></label>
+      {/* Panoul WhatsApp — acțiunea principală de contact */}
+      <div class="panou-wa content-start" data-reveal>
+        <Icon name="whatsapp" class="h-8 w-8 text-semnal" />
+        <h3 class="mt-4 text-h2">Scrie-ne pe WhatsApp</h3>
+        <p class="mt-3 max-w-sm text-muted-dark">
+          Trimite o poză cu problema — îți spunem ce e și cât costă, înainte să venim. Răspundem pe loc.
         </p>
 
-        <p class="text-caption text-muted-dark">
-          Nu e urgent? Lasă-ne un mesaj și revenim cu un apel în aceeași zi.
+        <a href={waUrl()} target="_blank" rel="noopener" class="btn-semnal mt-6 w-full text-h3 sm:w-auto" data-track="whatsapp">
+          <Icon name="whatsapp" class="h-5 w-5" />
+          Deschide WhatsApp
+        </a>
+
+        <p class="mt-5 text-caption text-muted-dark">
+          Preferi să vorbești? Sună la
+          <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="font-mono underline underline-offset-4 hover:text-portelan" data-track="telefon">
+            {FIRMA.telefonPrincipal.afisare}</a>.
         </p>
-
-        <div class="mt-4 md:mt-0">
-          <label for="nume" class="text-caption font-medium">Nume</label>
-          <input id="nume" name="nume" type="text" autocomplete="name" class="camp mt-1.5" />
-        </div>
-
-        <div class="mt-4 md:mt-0">
-          <label for="telefon" class="text-caption font-medium">Telefon</label>
-          <input id="telefon" name="telefon" type="tel" autocomplete="tel" required class="camp mt-1.5 font-mono" />
-        </div>
-
-        <div class="mt-4 md:mt-0">
-          <label for="mesaj" class="text-caption font-medium">Ce problemă ai?</label>
-          <textarea id="mesaj" name="mesaj" rows="4" class="camp mt-1.5"></textarea>
-        </div>
-
-        <button type="submit" class="btn-outline-dark mt-5 md:mt-1 md:justify-self-start">
-          Trimite cererea
-        </button>
-      </form>
+      </div>
     </div>
   </div>
 
@@ -167,27 +148,21 @@ import { FIRMA } from '../lib/firma';
     opacity: 0.65;
   }
 
-  .camp {
-    display: block;
-    width: 100%;
+  /* Panoul WhatsApp: suprafață puțin mai deschisă pe petrol, muchie prelucrată */
+  .panou-wa {
     border-radius: var(--radius-ui);
-    border: 1px solid color-mix(in srgb, var(--color-portelan) 35%, var(--color-petrol));
-    background-color: color-mix(in srgb, var(--color-portelan) 6%, var(--color-petrol));
-    /* Adâncitură prelucrată: umbră interioară discretă */
-    box-shadow: inset 0 2px 4px color-mix(in srgb, var(--color-petrol) 55%, transparent);
-    color: var(--color-portelan);
-    padding: 0.75rem 1rem;
-    transition: border-color var(--dur-quick) var(--ease-flux);
+    border: 1px solid var(--muchie-dark);
+    background-image: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--color-portelan) 7%, transparent),
+      color-mix(in srgb, var(--color-portelan) 2%, transparent)
+    );
+    box-shadow: inset 0 1px 0 color-mix(in srgb, var(--color-portelan) 14%, transparent);
+    padding: 1.75rem;
   }
-  .camp:hover {
-    border-color: color-mix(in srgb, var(--color-portelan) 60%, var(--color-petrol));
-  }
-  .camp:focus {
-    border-color: var(--color-portelan);
-    outline: none;
-  }
-  .camp:focus-visible {
-    outline: 2px solid var(--color-semnal);
-    outline-offset: 2px;
+  @media (min-width: 768px) {
+    .panou-wa {
+      padding: 2rem;
+    }
   }
 </style>

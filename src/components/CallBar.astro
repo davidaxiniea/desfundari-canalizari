@@ -1,18 +1,27 @@
 ---
 /*
-  Bara sticky de apel — elementul #1 de conversie pe mobil.
-  Un singur buton mare, mereu la un tap distanță. Dispare pe desktop
-  (acolo numărul stă în header).
+  Bara sticky de contact — elementul #1 de conversie pe mobil, mereu la un tap.
+  WhatsApp e acțiunea principală (portocaliu), „Sună" stă lângă el ca secundar.
+  Dispare pe desktop (acolo contactul stă în header).
 */
 import Icon from './Icon.astro';
-import { FIRMA } from '../lib/firma';
+import { FIRMA, waUrl } from '../lib/firma';
 ---
 
 <div
-  class="fixed inset-x-0 bottom-0 z-50 border-t border-abur bg-portelan/95 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur md:hidden"
+  class="fixed inset-x-0 bottom-0 z-50 flex gap-2 border-t border-abur bg-portelan/95 p-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur md:hidden"
 >
-  <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="btn-semnal w-full text-h3">
+  <a href={waUrl()} target="_blank" rel="noopener" class="btn-semnal grow text-h3" data-track="whatsapp">
+    <Icon name="whatsapp" class="h-5 w-5" />
+    WhatsApp
+  </a>
+  <a
+    href={`tel:${FIRMA.telefonPrincipal.tel}`}
+    class="btn-outline-light shrink-0 text-h3"
+    data-track="telefon"
+    aria-label={`Sună la ${FIRMA.telefonPrincipal.afisare}`}
+  >
     <Icon name="telefon" class="h-5 w-5" />
-    Sună acum · <span class="font-mono">{FIRMA.telefonPrincipal.afisare}</span>
+    Sună
   </a>
 </div>

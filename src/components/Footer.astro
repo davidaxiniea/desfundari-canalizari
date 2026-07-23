@@ -4,7 +4,8 @@
   telefoane, program, ancore.
 */
 import logoDark from '../assets/logo-principal-dark.svg';
-import { FIRMA } from '../lib/firma';
+import Icon from './Icon.astro';
+import { FIRMA, waUrl } from '../lib/firma';
 
 const an = new Date().getFullYear();
 const linkuri = [
@@ -33,15 +34,21 @@ const linkuri = [
       </div>
 
       <div>
-        <p class="eyebrow text-muted-dark">Telefon</p>
+        <p class="eyebrow text-muted-dark">Contact</p>
         <ul class="mt-2">
           <li>
-            <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="f-link inline-block py-1.5 font-mono font-medium">
+            <a href={waUrl()} target="_blank" rel="noopener" class="f-link inline-flex items-center gap-2 py-1.5 font-medium" data-track="whatsapp">
+              <Icon name="whatsapp" class="h-4 w-4 text-semnal" />
+              WhatsApp
+            </a>
+          </li>
+          <li>
+            <a href={`tel:${FIRMA.telefonPrincipal.tel}`} class="f-link inline-block py-1.5 font-mono font-medium" data-track="telefon">
               {FIRMA.telefonPrincipal.afisare}
             </a>
           </li>
           <li>
-            <a href={`tel:${FIRMA.telefonSecundar.tel}`} class="f-link inline-block py-1.5 font-mono font-medium">
+            <a href={`tel:${FIRMA.telefonSecundar.tel}`} class="f-link inline-block py-1.5 font-mono font-medium" data-track="telefon">
               {FIRMA.telefonSecundar.afisare}
             </a>
           </li>

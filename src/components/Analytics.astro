@@ -1,0 +1,79 @@
+---
+/*
+  Măsurarea conversiilor — Google Analytics 4 / Google Ads cu Consent Mode v2.
+
+  Se randează DOAR când există un ID în `ANALYTICS` (src/lib/firma.ts). Cât timp
+  ID-urile sunt goale, nu se încarcă niciun script Google și nu apare nici banda
+  de cookie-uri — deci nimic de urmărit, nimic de consimțit (corect GDPR).
+
+  Evenimente trimise: la orice click pe un element cu `data-track="whatsapp"` sau
+  `data-track="telefon"` se trimite un eveniment `contact_whatsapp` / `contact_telefon`.
+  Dacă e configurat și Google Ads (adsId + eticheta), se trimite și conversia de apel.
+
+  Fluxul de consimțământ:
+  - implicit totul „denied" (Consent Mode v2);
+  - banda de cookie-uri (ConsentBanner.astro) scrie „accept"/„refuz" în localStorage;
+  - la „accept" se ridică consimțământul, aici și în bandă.
+*/
+import { ANALYTICS, analyticsActiv } from '../lib/firma';
+
+const primaryId = ANALYTICS.ga4Id || ANALYTICS.adsId;
+---
+
+{
+  analyticsActiv && (
+    <>
+      <script
+        is:inline
+        define:vars={{
+          ga4Id: ANALYTICS.ga4Id,
+          adsId: ANALYTICS.adsId,
+          conversieContact: ANALYTICS.adsConversieContact,
+        }}
+      >
+        {`
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){ dataLayer.push(arguments); }
+        window.gtag = gtag;
+
+        // Consent Mode v2 — implicit refuzat până când vizitatorul acceptă.
+        gtag('consent', 'default', {
+          ad_storage: 'denied',
+          ad_user_data: 'denied',
+          ad_personalization: 'denied',
+          analytics_storage: 'denied',
+          wait_for_update: 500,
+        });
+
+        // Reține alegerea anterioară (bandă acceptată într-o vizită trecută).
+        try {
+          if (localStorage.getItem('consimtamant-cookie') === 'accept') {
+            gtag('consent', 'update', {
+              ad_storage: 'granted',
+              ad_user_data: 'granted',
+              ad_personalization: 'granted',
+              analytics_storage: 'granted',
+            });
+          }
+        } catch (e) {}
+
+        gtag('js', new Date());
+        if (ga4Id) gtag('config', ga4Id);
+        if (adsId) gtag('config', adsId);
+
+        // Conversii: orice click pe un CTA marcat cu data-track.
+        document.addEventListener('click', function (e) {
+          var el = e.target && e.target.closest ? e.target.closest('[data-track]') : null;
+          if (!el || typeof window.gtag !== 'function') return;
+          var tip = el.getAttribute('data-track'); // 'whatsapp' | 'telefon'
+          gtag('event', 'contact_' + tip, { metoda: tip });
+          if (adsId && conversieContact && (tip === 'whatsapp' || tip === 'telefon')) {
+            gtag('event', 'conversion', { send_to: adsId + '/' + conversieContact });
+          }
+        });
+        `}
+      </script>
+      <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${primaryId}`} />
+    </>
+  )
+}

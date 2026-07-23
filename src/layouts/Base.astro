@@ -10,9 +10,11 @@ import '@fontsource/inter/latin-ext-500.css';
 import '@fontsource/jetbrains-mono/latin-500.css';
 import '../styles/global.css';
 import { FIRMA, ZONE_ILFOV, RAZA_KM } from '../lib/firma';
+import Analytics from '../components/Analytics.astro';
+import ConsentBanner from '../components/ConsentBanner.astro';
 
 interface Props {
-  // Paginile secundare (ex. /multumim) nu se indexează
+  // Paginile secundare (dacă apar) nu se indexează
   noindex?: boolean;
 }
 const { noindex = false } = Astro.props;
@@ -116,9 +118,13 @@ const schema = {
     <meta name="twitter:image" content={ogImage} />
 
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+
+    {/* Măsurarea conversiilor — inactivă până se completează ID-urile în firma.ts */}
+    <Analytics />
   </head>
   <body>
     <slot />
+    <ConsentBanner />
     <script>
       // Reveal la scroll: adaugă .in-view o singură dată; fără librării
       const observer = new IntersectionObserver(
