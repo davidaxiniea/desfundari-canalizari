@@ -32,7 +32,7 @@ export const FIRMA = {
   Completează ID-urile după ce firma își face conturile, apoi redeploy.
 */
 export const ANALYTICS = {
-  ga4Id: '', // TODO: „G-XXXXXXXXXX" din Google Analytics 4
+  ga4Id: 'G-J5H0V9PWWK', // Google Analytics 4 — proprietatea „Site desfundari"
   adsId: '', // TODO opțional: „AW-XXXXXXXXX" din Google Ads (conversia de apel/WhatsApp)
   adsConversieContact: '', // TODO opțional: eticheta conversiei, ex. „AbCd_EfGhIjk1234"
 } as const;
