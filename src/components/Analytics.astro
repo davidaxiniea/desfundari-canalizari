@@ -31,7 +31,6 @@ const primaryId = ANALYTICS.ga4Id || ANALYTICS.adsId;
           conversieContact: ANALYTICS.adsConversieContact,
         }}
       >
-        {`
         window.dataLayer = window.dataLayer || [];
         function gtag(){ dataLayer.push(arguments); }
         window.gtag = gtag;
@@ -71,7 +70,6 @@ const primaryId = ANALYTICS.ga4Id || ANALYTICS.adsId;
             gtag('event', 'conversion', { send_to: adsId + '/' + conversieContact });
           }
         });
-        `}
       </script>
       <script is:inline async src={`https://www.googletagmanager.com/gtag/js?id=${primaryId}`} />
     </>
