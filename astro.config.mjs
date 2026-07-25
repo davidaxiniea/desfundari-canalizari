@@ -3,10 +3,10 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// Publicare pe GitHub Pages (site de proiect → servit din subfolderul /BASE/).
-// TODO: când firma cumpără domeniul, schimbă SITE cu domeniul real și pune BASE = '/'.
-const SITE = 'https://davidaxiniea.github.io';
-const BASE = '/desfundari-canalizari/';
+// Publicare pe GitHub Pages, pe domeniul propriu al firmei (servit din rădăcină).
+// Domeniul e legat prin public/CNAME + înregistrările DNS (A pe apex către GitHub Pages).
+const SITE = 'https://desfundari-canalizari.ro';
+const BASE = '/';
 
 export default defineConfig({
   site: SITE,
