@@ -10,12 +10,10 @@ export const FIRMA = {
   /*
     WhatsApp — CTA-ul principal de contact. `numar` e în format wa.me:
     fără „+" și fără „0" la început (prefix de țară 40 + numărul).
-    TODO client: confirmă că numărul principal are într-adevăr WhatsApp activ;
-    dacă WhatsApp e pe alt număr, schimbă doar `numar` aici.
+    Confirmat activ prin test extern (iulie 2026).
   */
   whatsapp: {
     numar: '40760509072',
-    mesaj: 'Bună ziua! Am nevoie de o intervenție la canalizare. Vă rog să reveniți.',
   },
   // Verificate pe profilul Google Business (iulie 2026)
   rating: { valoare: '5.0', numarRecenzii: 18 },
@@ -40,11 +38,10 @@ export const ANALYTICS = {
 export const analyticsActiv = Boolean(ANALYTICS.ga4Id || ANALYTICS.adsId);
 
 /*
-  Construiește linkul wa.me. Poate primi un mesaj precompletat diferit per buton
-  (ex. de pe un card de serviciu), altfel folosește mesajul implicit.
+  Construiește linkul wa.me. Fără `?text=` — conversația se deschide goală,
+  ca omul să scrie cu ce se confruntă, în cuvintele lui.
 */
-export const waUrl = (mesaj: string = FIRMA.whatsapp.mesaj): string =>
-  `https://wa.me/${FIRMA.whatsapp.numar}?text=${encodeURIComponent(mesaj)}`;
+export const waUrl = (): string => `https://wa.me/${FIRMA.whatsapp.numar}`;
 
 /*
   Acoperire: București (toate sectoarele) + Ilfov + o rază de ~20 km în jurul Bucureștiului.
