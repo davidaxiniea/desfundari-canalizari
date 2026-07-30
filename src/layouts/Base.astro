@@ -97,8 +97,10 @@ const schema = {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
-    <link rel="icon" type="image/png" sizes="32x32" href={withBase('monograma-32.png')} />
+    <link rel="icon" href={withBase('favicon.ico')} sizes="any" />
     <link rel="icon" type="image/svg+xml" href={withBase('favicon.svg')} />
+    <link rel="icon" type="image/png" sizes="96x96" href={withBase('monograma-96.png')} />
+    <link rel="icon" type="image/png" sizes="192x192" href={withBase('monograma-192.png')} />
     <link rel="apple-touch-icon" sizes="180x180" href={withBase('monograma-180.png')} />
     <link rel="sitemap" href={withBase('sitemap-index.xml')} />
     <meta name="generator" content={Astro.generator} />
